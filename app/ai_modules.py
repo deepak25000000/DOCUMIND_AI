@@ -51,10 +51,9 @@ def _configure_client() -> None:
 def _fallback_response(text: str) -> Dict[str, Any]:
     """Return a basic fallback response when Gemini is unavailable."""
     import re
-    words = text.split()[:200]
-    summary = " ".join(words)
-    if len(text.split()) > 200:
-        summary += "..."
+    
+    # Provide a clean, professional fallback summary instead of raw OCR text
+    summary = "Document processed successfully. (Note: AI Analysis is running in Fallback Mode. To generate a real summary, please ensure a valid GEMINI_API_KEY is configured)."
 
     # Extract pseudo-entities using regex to ensure they are never completely empty for the hackathon
     dates = list(set(re.findall(r'(?i)\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2}, \d{4}\b|\b\d{4}-\d{2}-\d{2}\b', text)))
