@@ -150,7 +150,11 @@ async def analyze_file(
         except ValueError as e:
             return JSONResponse(
                 status_code=422,
-                content={"status": "error", "message": str(e)},
+                content={
+                    "status": "error", "message": str(e),
+                    "fileName": request.fileName, "summary": f"Error: {str(e)}",
+                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]}, "sentiment": "Neutral"
+                },
             )
         except Exception as e:
             logger.error(f"Text extraction error: {e}")
@@ -159,6 +163,10 @@ async def analyze_file(
                 content={
                     "status": "error",
                     "message": f"Failed to extract text from {request.fileType} file: {str(e)}",
+                    "fileName": request.fileName,
+                    "summary": f"Error: Could not extract text. {str(e)}",
+                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]},
+                    "sentiment": "Neutral"
                 },
             )
 
@@ -169,7 +177,11 @@ async def analyze_file(
         if not cleaned_text:
             return JSONResponse(
                 status_code=422,
-                content={"status": "error", "message": "No meaningful text extracted from the file."},
+                content={
+                    "status": "error", "message": "No meaningful text extracted from the file.",
+                    "fileName": request.fileName, "summary": "Error: No meaningful text extracted.",
+                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]}, "sentiment": "Neutral"
+                },
             )
 
         logger.info(f"Extracted {len(cleaned_text)} characters of text")
@@ -203,7 +215,7 @@ async def analyze_file(
         logger.error(f"Unexpected error: {e}", exc_info=True)
         return JSONResponse(
             status_code=500,
-            content={"status": "error", "message": f"Internal server error: {str(e)}"},
+            content={"status": "error", "message": f"Internal server error: {str(e)}", "fileName": "error", "summary": f"Error: {str(e)}", "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]}, "sentiment": "Neutral"},
         )
 
 
