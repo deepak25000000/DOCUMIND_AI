@@ -93,8 +93,7 @@ async def analyze_document(text: str) -> Dict[str, Any]:
 
     try:
         _configure_client()
-
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         prompt = _PROMPT_TEMPLATE.format(text=truncated)
 
         response = model.generate_content(prompt)

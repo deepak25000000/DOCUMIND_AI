@@ -1,580 +1,1123 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DocuMind AI - Intelligent Document Analysis</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --black:#000;--card:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.08);
-  --blue:#00d4ff;--purple:#8b5cf6;--text:#e4e4e7;--text-dim:#71717a;
-  --green:#22c55e;--gold:#f59e0b;--red:#ef4444;
-}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',system-ui,sans-serif;background:var(--black);color:var(--text);
-  min-height:100vh;overflow-x:hidden;line-height:1.6;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuMind AI - Intelligent Document Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-/* ── Grid background ── */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-  background-size:60px 60px;
-}
+    :root {
+      --black: #000;
+      --card: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --blue: #00d4ff;
+      --purple: #8b5cf6;
+      --text: #e4e4e7;
+      --text-dim: #71717a;
+      --green: #22c55e;
+      --gold: #f59e0b;
+      --red: #ef4444;
+    }
 
-/* ── Floating particles (pure CSS) ── */
-.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.particles span{
-  position:absolute;display:block;border-radius:50%;
-  background:var(--blue);opacity:0;animation:floatUp linear infinite;
-}
-@keyframes floatUp{
-  0%{transform:translateY(100vh) scale(0);opacity:0}
-  10%{opacity:.6}
-  90%{opacity:.2}
-  100%{transform:translateY(-10vh) scale(1);opacity:0}
-}
+    html {
+      scroll-behavior: smooth
+    }
 
-/* ── Main container ── */
-.container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
 
-/* ── Hero ── */
-.hero{text-align:center;padding:4rem 0 3rem}
-.logo{font-size:.9rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);margin-bottom:1rem}
-.hero h1{
-  font-size:clamp(2.5rem,6vw,4.2rem);font-weight:900;line-height:1.1;
-  background:linear-gradient(135deg,var(--blue),var(--purple),var(--blue));
-  background-size:200% 200%;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-  animation:gradientMove 4s ease infinite;
-}
-@keyframes gradientMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.hero .tagline{
-  margin-top:1rem;font-size:1.1rem;color:var(--text-dim);font-weight:400;max-width:500px;margin-inline:auto;
-}
+    /* ── Grid background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
 
-/* ── Glass card base ── */
-.glass{
-  background:var(--card);
-  border:1px solid var(--card-border);
-  border-radius:16px;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  padding:2rem;
-  transition:border-color .3s,box-shadow .3s;
-}
-.glass:hover{border-color:rgba(255,255,255,.12)}
+    /* ── Floating particles (pure CSS) ── */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden
+    }
 
-/* ── Upload zone ── */
-.upload-zone{
-  margin-top:2.5rem;position:relative;cursor:pointer;text-align:center;
-  border:2px dashed rgba(255,255,255,.12);border-radius:16px;padding:3rem 2rem;
-  transition:border-color .3s,box-shadow .3s;
-  background:var(--card);
-}
-.upload-zone.drag-over,.upload-zone:hover{
-  border-color:var(--blue);
-  box-shadow:0 0 30px rgba(0,212,255,.12),inset 0 0 30px rgba(0,212,255,.04);
-}
-.upload-zone.has-file{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.1)}
-.upload-icon{font-size:3rem;margin-bottom:.8rem;display:block;opacity:.5}
-.upload-zone p{color:var(--text-dim);font-size:.95rem}
-.upload-zone .file-types{font-size:.8rem;margin-top:.5rem;color:var(--text-dim);opacity:.6}
-.upload-zone input[type=file]{display:none}
-.file-preview{
-  display:none;align-items:center;gap:.75rem;justify-content:center;
-  background:rgba(0,212,255,.06);border-radius:10px;padding:.65rem 1.2rem;margin-top:1rem;
-  font-size:.9rem;color:var(--blue);
-}
-.file-preview.show{display:inline-flex}
-.file-preview .remove-file{
-  cursor:pointer;opacity:.6;transition:opacity .2s;font-size:1.1rem;
-}
-.file-preview .remove-file:hover{opacity:1}
+    .particles span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      background: var(--blue);
+      opacity: 0;
+      animation: floatUp linear infinite;
+    }
 
-/* ── API key input ── */
-.api-section{margin-top:1.5rem}
-.input-group{position:relative}
-.input-group label{display:block;font-size:.8rem;color:var(--text-dim);margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase}
-.input-group input{
-  width:100%;padding:.85rem 1.2rem;border-radius:12px;border:1px solid var(--card-border);
-  background:rgba(255,255,255,.03);color:var(--text);font-family:inherit;font-size:.95rem;
-  transition:border-color .3s,box-shadow .3s;outline:none;
-}
-.input-group input:focus{border-color:var(--purple);box-shadow:0 0 20px rgba(139,92,246,.12)}
-.input-group input::placeholder{color:var(--text-dim);opacity:.5}
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0
+      }
 
-/* ── Analyze button ── */
-.analyze-btn{
-  margin-top:1.8rem;width:100%;padding:1rem;border:none;border-radius:14px;cursor:pointer;
-  font-family:inherit;font-size:1.05rem;font-weight:700;letter-spacing:.03em;
-  color:#fff;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  box-shadow:0 0 30px rgba(0,212,255,.2),0 0 60px rgba(139,92,246,.1);
-  transition:transform .2s,box-shadow .3s;
-}
-.analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 40px rgba(0,212,255,.35),0 0 80px rgba(139,92,246,.15)}
-.analyze-btn:active:not(:disabled){transform:translateY(0)}
-.analyze-btn:disabled{opacity:.45;cursor:not-allowed}
-.analyze-btn::after{
-  content:'';position:absolute;inset:-2px;border-radius:16px;padding:2px;
-  background:linear-gradient(135deg,var(--blue),var(--purple),var(--blue));
-  background-size:300% 300%;animation:gradientMove 3s ease infinite;
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.5;pointer-events:none;
-}
-.btn-pulse{animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 30px rgba(0,212,255,.2),0 0 60px rgba(139,92,246,.1)}50%{box-shadow:0 0 45px rgba(0,212,255,.35),0 0 90px rgba(139,92,246,.2)}}
+      10% {
+        opacity: .6
+      }
 
-/* ── Loading ── */
-.loading-overlay{
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  padding:4rem 2rem;text-align:center;margin-top:2rem;
-}
-.loading-overlay.show{display:flex}
-.dna-helix{display:flex;gap:6px;margin-bottom:1.5rem}
-.dna-helix span{
-  width:8px;height:40px;border-radius:4px;
-  background:linear-gradient(180deg,var(--blue),var(--purple));
-  animation:helixBounce 1.2s ease-in-out infinite;
-}
-.dna-helix span:nth-child(1){animation-delay:0s}
-.dna-helix span:nth-child(2){animation-delay:.1s}
-.dna-helix span:nth-child(3){animation-delay:.2s}
-.dna-helix span:nth-child(4){animation-delay:.3s}
-.dna-helix span:nth-child(5){animation-delay:.4s}
-.dna-helix span:nth-child(6){animation-delay:.5s}
-.dna-helix span:nth-child(7){animation-delay:.6s}
-@keyframes helixBounce{
-  0%,100%{transform:scaleY(.4);opacity:.4}
-  50%{transform:scaleY(1);opacity:1}
-}
-.loading-text{color:var(--text-dim);font-size:.95rem}
+      90% {
+        opacity: .2
+      }
 
-/* ── Results ── */
-.results{display:none;margin-top:2.5rem;gap:1.5rem;flex-direction:column}
-.results.show{display:flex}
-.result-card{animation:fadeInUp .5s ease forwards;opacity:0}
-.result-card:nth-child(1){animation-delay:.1s}
-.result-card:nth-child(2){animation-delay:.25s}
-.result-card:nth-child(3){animation-delay:.4s}
-.result-card:nth-child(4){animation-delay:.55s}
-@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
-.result-card{transform:translateY(20px)}
-.card-header{
-  display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;
-  font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);
-}
-.card-header .icon{font-size:1.1rem}
-.card-title{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:.75rem}
-
-/* Summary */
-.summary-text{color:var(--text);line-height:1.75;font-size:.95rem}
-.summary-text .cursor{
-  display:inline-block;width:2px;height:1em;background:var(--blue);
-  animation:blink .8s infinite;vertical-align:text-bottom;margin-left:2px;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-/* Entities */
-.entity-group{margin-bottom:1rem}
-.entity-group:last-child{margin-bottom:0}
-.entity-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
-.entity-tags{display:flex;flex-wrap:wrap;gap:.4rem}
-.entity-tag{
-  padding:.3rem .75rem;border-radius:20px;font-size:.82rem;font-weight:500;
-  border:1px solid;animation:tagPop .3s ease forwards;opacity:0;transform:scale(.8);
-}
-@keyframes tagPop{to{opacity:1;transform:scale(1)}}
-.tag-name{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:var(--blue)}
-.tag-date{background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.25);color:var(--purple)}
-.tag-org{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:var(--green)}
-.tag-amount{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25);color:var(--gold)}
-.no-entities{color:var(--text-dim);font-size:.85rem;font-style:italic}
-
-/* Sentiment gauge */
-.sentiment-container{display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
-.gauge-wrapper{position:relative;width:120px;height:120px;flex-shrink:0}
-.gauge-bg,.gauge-fill{
-  width:120px;height:120px;border-radius:50%;position:absolute;top:0;left:0;
-}
-.gauge-bg{border:6px solid rgba(255,255,255,.06)}
-.gauge-fill{
-  border:6px solid transparent;border-top-color:var(--blue);
-  transform:rotate(-90deg);
-  transition:transform 1s ease,border-top-color .5s;
-}
-.gauge-label{
-  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-.gauge-emoji{font-size:1.8rem}
-.gauge-value{font-size:.75rem;color:var(--text-dim);margin-top:.2rem;text-transform:capitalize;font-weight:600}
-.sentiment-details{flex:1;min-width:200px}
-.sentiment-detail-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);
-}
-.sentiment-detail-row:last-child{border:none}
-.sentiment-detail-label{font-size:.85rem;color:var(--text-dim)}
-.sentiment-detail-bar{
-  width:100px;height:6px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;
-}
-.sentiment-detail-bar-fill{height:100%;border-radius:3px;transition:width 1s ease .5s;width:0}
-
-/* Stats bar */
-.stats-bar{
-  display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.5rem;
-  padding:1rem 1.5rem;border-radius:12px;
-  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);
-  animation:fadeInUp .5s ease .65s forwards;opacity:0;transform:translateY(20px);
-}
-.stat-item{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--text-dim)}
-.stat-item .stat-value{color:var(--text);font-weight:600}
-
-/* ── Toast ── */
-.toast-container{position:fixed;top:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem}
-.toast{
-  padding:.9rem 1.4rem;border-radius:12px;font-size:.88rem;
-  background:rgba(30,30,30,.95);border:1px solid var(--card-border);
-  backdrop-filter:blur(10px);color:var(--text);
-  animation:toastIn .3s ease;max-width:380px;
-  display:flex;align-items:center;gap:.6rem;
-}
-.toast.error{border-color:rgba(239,68,68,.3);color:var(--red)}
-.toast.success{border-color:rgba(34,197,94,.3);color:var(--green)}
-@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-@keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
-
-/* ── Footer ── */
-.footer{
-  text-align:center;padding:3rem 0 2rem;color:var(--text-dim);font-size:.8rem;
-  border-top:1px solid rgba(255,255,255,.04);margin-top:4rem;
-}
-.footer a{color:var(--blue);text-decoration:none}
-.footer a:hover{text-decoration:underline}
-
-/* ── Responsive ── */
-@media(max-width:640px){
-  .container{padding:1.2rem 1rem}
-  .hero{padding:2.5rem 0 2rem}
-  .glass{padding:1.5rem}
-  .sentiment-container{flex-direction:column;align-items:flex-start}
-  .stats-bar{flex-direction:column;gap:.75rem}
-}
-</style>
-</head>
-<body>
-
-<!-- Particles -->
-<div class="particles" id="particles"></div>
-
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
-
-<div class="container">
-  <!-- Hero -->
-  <section class="hero">
-    <div class="logo">DocuMind</div>
-    <h1>DocuMind AI</h1>
-    <p class="tagline">Intelligent Document Analysis Powered by AI</p>
-  </section>
-
-  <!-- Upload Card -->
-  <section class="glass">
-    <div class="upload-zone" id="uploadZone">
-      <span class="upload-icon">&#8682;</span>
-      <p>Drag &amp; drop your document here, or <strong style="color:var(--blue)">browse</strong></p>
-      <p class="file-types">Supports PDF, DOCX, PNG, JPG, JPEG, TIFF</p>
-      <input type="file" id="fileInput" accept=".pdf,.docx,.png,.jpg,.jpeg,.tiff,.tif,.bmp,.webp">
-    </div>
-    <div class="file-preview" id="filePreview">
-      <span id="fileIcon">&#128196;</span>
-      <span id="fileName"></span>
-      <span class="remove-file" id="removeFile">&times;</span>
-    </div>
-
-    <div class="api-section">
-      <div class="input-group">
-        <label>API Key</label>
-        <input type="text" id="apiKeyInput" placeholder="Enter your x-api-key" value="hcl_hack_api_key_2024_secure">
-      </div>
-    </div>
-
-    <button class="analyze-btn btn-pulse" id="analyzeBtn" disabled>
-      Analyze Document
-    </button>
-  </section>
-
-  <!-- Loading -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="dna-helix">
-      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <p class="loading-text">Analyzing your document with AI...</p>
-  </div>
-
-  <!-- Results -->
-  <div class="results" id="results">
-    <!-- Summary -->
-    <div class="result-card glass" id="summaryCard">
-      <div class="card-header"><span class="icon">&#9889;</span> Summary</div>
-      <div class="summary-text" id="summaryText"></div>
-    </div>
-
-    <!-- Entities -->
-    <div class="result-card glass" id="entitiesCard">
-      <div class="card-header"><span class="icon">&#128278;</span> Named Entities</div>
-      <div id="entitiesContent"></div>
-    </div>
-
-    <!-- Sentiment -->
-    <div class="result-card glass" id="sentimentCard">
-      <div class="card-header"><span class="icon">&#127919;</span> Sentiment Analysis</div>
-      <div class="sentiment-container" id="sentimentContent"></div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-bar" id="statsBar"></div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    Built with FastAPI &amp; Transformers &mdash; DocuMind AI &copy; 2026
-  </footer>
-</div>
-
-<script>
-(() => {
-  // ── Particles ──
-  const particlesEl = document.getElementById('particles');
-  for (let i = 0; i < 35; i++) {
-    const s = document.createElement('span');
-    const size = Math.random() * 3 + 1;
-    s.style.cssText = `
-      width:${size}px;height:${size}px;
-      left:${Math.random()*100}%;
-      animation-duration:${Math.random()*12+8}s;
-      animation-delay:${Math.random()*10}s;
-    `;
-    particlesEl.appendChild(s);
-  }
-
-  // ── DOM refs ──
-  const uploadZone = document.getElementById('uploadZone');
-  const fileInput = document.getElementById('fileInput');
-  const filePreview = document.getElementById('filePreview');
-  const fileNameEl = document.getElementById('fileName');
-  const removeFile = document.getElementById('removeFile');
-  const apiKeyInput = document.getElementById('apiKeyInput');
-  const analyzeBtn = document.getElementById('analyzeBtn');
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  const resultsEl = document.getElementById('results');
-  const summaryText = document.getElementById('summaryText');
-  const entitiesContent = document.getElementById('entitiesContent');
-  const sentimentContent = document.getElementById('sentimentContent');
-  const statsBar = document.getElementById('statsBar');
-
-  let selectedFile = null;
-
-  // ── Helpers ──
-  function toast(msg, type = 'error') {
-    const container = document.getElementById('toastContainer');
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    t.textContent = msg;
-    container.appendChild(t);
-    setTimeout(() => { t.style.animation = 'toastOut .3s ease forwards'; setTimeout(() => t.remove(), 300); }, 4000);
-  }
-
-  function getFileType(name) {
-    const ext = name.split('.').pop().toLowerCase();
-    if (ext === 'pdf') return 'pdf';
-    if (ext === 'docx') return 'docx';
-    if (['png','jpg','jpeg','tiff','tif','bmp','webp'].includes(ext)) return 'image';
-    return null;
-  }
-
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function updateBtnState() {
-    analyzeBtn.disabled = !(selectedFile && apiKeyInput.value.trim());
-  }
-
-  // ── File selection ──
-  function handleFile(file) {
-    const ft = getFileType(file.name);
-    if (!ft) { toast('Unsupported file type. Use PDF, DOCX, or image files.'); return; }
-    if (file.size > 20 * 1024 * 1024) { toast('File too large. Maximum 20MB.'); return; }
-    selectedFile = file;
-    fileNameEl.textContent = file.name;
-    filePreview.classList.add('show');
-    uploadZone.classList.add('has-file');
-    updateBtnState();
-  }
-
-  uploadZone.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
-  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-  uploadZone.addEventListener('drop', e => {
-    e.preventDefault(); uploadZone.classList.remove('drag-over');
-    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-  });
-  removeFile.addEventListener('click', e => {
-    e.stopPropagation();
-    selectedFile = null; fileInput.value = '';
-    filePreview.classList.remove('show');
-    uploadZone.classList.remove('has-file');
-    updateBtnState();
-  });
-  apiKeyInput.addEventListener('input', updateBtnState);
-
-  // ── Typewriter ──
-  function typeWriter(el, text, speed = 12) {
-    el.innerHTML = '';
-    let i = 0;
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    function type() {
-      if (i < text.length) {
-        el.textContent = text.slice(0, ++i);
-        el.appendChild(cursor);
-        setTimeout(type, speed);
-      } else {
-        setTimeout(() => cursor.remove(), 2000);
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0
       }
     }
-    type();
-  }
 
-  // ── Render entities ──
-  function renderEntities(entities) {
-    entitiesContent.innerHTML = '';
-    const groups = [
-      { key: 'names', label: 'People', cls: 'tag-name' },
-      { key: 'dates', label: 'Dates', cls: 'tag-date' },
-      { key: 'organizations', label: 'Organizations', cls: 'tag-org' },
-      { key: 'amounts', label: 'Amounts', cls: 'tag-amount' },
-    ];
-    let hasAny = false;
-    groups.forEach(g => {
-      const items = entities[g.key] || [];
-      if (!items.length) return;
-      hasAny = true;
-      const div = document.createElement('div');
-      div.className = 'entity-group';
-      div.innerHTML = `<div class="entity-label">${g.label}</div><div class="entity-tags">${
-        items.map((item, i) => `<span class="entity-tag ${g.cls}" style="animation-delay:${i*0.06}s">${item}</span>`).join('')
-      }</div>`;
-      entitiesContent.appendChild(div);
-    });
-    if (!hasAny) entitiesContent.innerHTML = '<p class="no-entities">No named entities detected.</p>';
-  }
+    /* ── Main container ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem
+    }
 
-  // ── Render sentiment ──
-  function renderSentiment(sentiment) {
-    const label = (sentiment.label || sentiment.sentiment || 'neutral').toLowerCase();
-    const score = sentiment.score != null ? sentiment.score : (sentiment.confidence || 0);
-    const emojis = { positive: '&#128578;', negative: '&#128577;', neutral: '&#128528;' };
-    const colors = { positive: 'var(--green)', negative: 'var(--red)', neutral: 'var(--text-dim)' };
-    const rotation = -90 + (score * 360);
-    const breakdown = sentiment.scores || sentiment.breakdown || {};
-    const pos = breakdown.positive || (label === 'positive' ? score : 0);
-    const neg = breakdown.negative || (label === 'negative' ? score : 0);
-    const neu = breakdown.neutral || (label === 'neutral' ? score : 0);
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 3rem
+    }
 
-    sentimentContent.innerHTML = `
+    .logo {
+      font-size: .9rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1rem
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--blue), var(--purple), var(--blue));
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientMove 4s ease infinite;
+    }
+
+    @keyframes gradientMove {
+
+      0%,
+      100% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+    }
+
+    .hero .tagline {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      font-weight: 400;
+      max-width: 500px;
+      margin-inline: auto;
+    }
+
+    /* ── Glass card base ── */
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem;
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .glass:hover {
+      border-color: rgba(255, 255, 255, .12)
+    }
+
+    /* ── Upload zone ── */
+    .upload-zone {
+      margin-top: 2.5rem;
+      position: relative;
+      cursor: pointer;
+      text-align: center;
+      border: 2px dashed rgba(255, 255, 255, .12);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      transition: border-color .3s, box-shadow .3s;
+      background: var(--card);
+    }
+
+    .upload-zone.drag-over,
+    .upload-zone:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 30px rgba(0, 212, 255, .12), inset 0 0 30px rgba(0, 212, 255, .04);
+    }
+
+    .upload-zone.has-file {
+      border-color: var(--green);
+      box-shadow: 0 0 20px rgba(34, 197, 94, .1)
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: .8rem;
+      display: block;
+      opacity: .5
+    }
+
+    .upload-zone p {
+      color: var(--text-dim);
+      font-size: .95rem
+    }
+
+    .upload-zone .file-types {
+      font-size: .8rem;
+      margin-top: .5rem;
+      color: var(--text-dim);
+      opacity: .6
+    }
+
+    .upload-zone input[type=file] {
+      display: none
+    }
+
+    .file-preview {
+      display: none;
+      align-items: center;
+      gap: .75rem;
+      justify-content: center;
+      background: rgba(0, 212, 255, .06);
+      border-radius: 10px;
+      padding: .65rem 1.2rem;
+      margin-top: 1rem;
+      font-size: .9rem;
+      color: var(--blue);
+    }
+
+    .file-preview.show {
+      display: inline-flex
+    }
+
+    .file-preview .remove-file {
+      cursor: pointer;
+      opacity: .6;
+      transition: opacity .2s;
+      font-size: 1.1rem;
+    }
+
+    .file-preview .remove-file:hover {
+      opacity: 1
+    }
+
+    /* ── API key input ── */
+    .api-section {
+      margin-top: 1.5rem
+    }
+
+    .input-group {
+      position: relative
+    }
+
+    .input-group label {
+      display: block;
+      font-size: .8rem;
+      color: var(--text-dim);
+      margin-bottom: .5rem;
+      letter-spacing: .05em;
+      text-transform: uppercase
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: .85rem 1.2rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, .03);
+      color: var(--text);
+      font-family: inherit;
+      font-size: .95rem;
+      transition: border-color .3s, box-shadow .3s;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 20px rgba(139, 92, 246, .12)
+    }
+
+    .input-group input::placeholder {
+      color: var(--text-dim);
+      opacity: .5
+    }
+
+    /* ── Analyze button ── */
+    .analyze-btn {
+      margin-top: 1.8rem;
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 0 30px rgba(0, 212, 255, .2), 0 0 60px rgba(139, 92, 246, .1);
+      transition: transform .2s, box-shadow .3s;
+    }
+
+    .analyze-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(0, 212, 255, .35), 0 0 80px rgba(139, 92, 246, .15)
+    }
+
+    .analyze-btn:active:not(:disabled) {
+      transform: translateY(0)
+    }
+
+    .analyze-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    .analyze-btn::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 16px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--blue), var(--purple), var(--blue));
+      background-size: 300% 300%;
+      animation: gradientMove 3s ease infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .5;
+      pointer-events: none;
+    }
+
+    .btn-pulse {
+      animation: pulse 2s ease-in-out infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 30px rgba(0, 212, 255, .2), 0 0 60px rgba(139, 92, 246, .1)
+      }
+
+      50% {
+        box-shadow: 0 0 45px rgba(0, 212, 255, .35), 0 0 90px rgba(139, 92, 246, .2)
+      }
+    }
+
+    /* ── Loading ── */
+    .loading-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .loading-overlay.show {
+      display: flex
+    }
+
+    .dna-helix {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.5rem
+    }
+
+    .dna-helix span {
+      width: 8px;
+      height: 40px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--blue), var(--purple));
+      animation: helixBounce 1.2s ease-in-out infinite;
+    }
+
+    .dna-helix span:nth-child(1) {
+      animation-delay: 0s
+    }
+
+    .dna-helix span:nth-child(2) {
+      animation-delay: .1s
+    }
+
+    .dna-helix span:nth-child(3) {
+      animation-delay: .2s
+    }
+
+    .dna-helix span:nth-child(4) {
+      animation-delay: .3s
+    }
+
+    .dna-helix span:nth-child(5) {
+      animation-delay: .4s
+    }
+
+    .dna-helix span:nth-child(6) {
+      animation-delay: .5s
+    }
+
+    .dna-helix span:nth-child(7) {
+      animation-delay: .6s
+    }
+
+    @keyframes helixBounce {
+
+      0%,
+      100% {
+        transform: scaleY(.4);
+        opacity: .4
+      }
+
+      50% {
+        transform: scaleY(1);
+        opacity: 1
+      }
+    }
+
+    .loading-text {
+      color: var(--text-dim);
+      font-size: .95rem
+    }
+
+    /* ── Results ── */
+    .results {
+      display: none;
+      margin-top: 2.5rem;
+      gap: 1.5rem;
+      flex-direction: column
+    }
+
+    .results.show {
+      display: flex
+    }
+
+    .result-card {
+      animation: fadeInUp .5s ease forwards;
+      opacity: 0
+    }
+
+    .result-card:nth-child(1) {
+      animation-delay: .1s
+    }
+
+    .result-card:nth-child(2) {
+      animation-delay: .25s
+    }
+
+    .result-card:nth-child(3) {
+      animation-delay: .4s
+    }
+
+    .result-card:nth-child(4) {
+      animation-delay: .55s
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .result-card {
+      transform: translateY(20px)
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-dim);
+    }
+
+    .card-header .icon {
+      font-size: 1.1rem
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .75rem
+    }
+
+    /* Summary */
+    .summary-text {
+      color: var(--text);
+      line-height: 1.75;
+      font-size: .95rem
+    }
+
+    .summary-text .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--blue);
+      animation: blink .8s infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    /* Entities */
+    .entity-group {
+      margin-bottom: 1rem
+    }
+
+    .entity-group:last-child {
+      margin-bottom: 0
+    }
+
+    .entity-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-dim);
+      margin-bottom: .5rem
+    }
+
+    .entity-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem
+    }
+
+    .entity-tag {
+      padding: .3rem .75rem;
+      border-radius: 20px;
+      font-size: .82rem;
+      font-weight: 500;
+      border: 1px solid;
+      animation: tagPop .3s ease forwards;
+      opacity: 0;
+      transform: scale(.8);
+    }
+
+    @keyframes tagPop {
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .tag-name {
+      background: rgba(0, 212, 255, .08);
+      border-color: rgba(0, 212, 255, .25);
+      color: var(--blue)
+    }
+
+    .tag-date {
+      background: rgba(139, 92, 246, .08);
+      border-color: rgba(139, 92, 246, .25);
+      color: var(--purple)
+    }
+
+    .tag-org {
+      background: rgba(34, 197, 94, .08);
+      border-color: rgba(34, 197, 94, .25);
+      color: var(--green)
+    }
+
+    .tag-amount {
+      background: rgba(245, 158, 11, .08);
+      border-color: rgba(245, 158, 11, .25);
+      color: var(--gold)
+    }
+
+    .no-entities {
+      color: var(--text-dim);
+      font-size: .85rem;
+      font-style: italic
+    }
+
+    /* Sentiment gauge */
+    .sentiment-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap
+    }
+
+    .gauge-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0
+    }
+
+    .gauge-bg,
+    .gauge-fill {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .gauge-bg {
+      border: 6px solid rgba(255, 255, 255, .06)
+    }
+
+    .gauge-fill {
+      border: 6px solid transparent;
+      border-top-color: var(--blue);
+      transform: rotate(-90deg);
+      transition: transform 1s ease, border-top-color .5s;
+    }
+
+    .gauge-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-emoji {
+      font-size: 1.8rem
+    }
+
+    .gauge-value {
+      font-size: .75rem;
+      color: var(--text-dim);
+      margin-top: .2rem;
+      text-transform: capitalize;
+      font-weight: 600
+    }
+
+    .sentiment-details {
+      flex: 1;
+      min-width: 200px
+    }
+
+    .sentiment-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+    }
+
+    .sentiment-detail-row:last-child {
+      border: none
+    }
+
+    .sentiment-detail-label {
+      font-size: .85rem;
+      color: var(--text-dim)
+    }
+
+    .sentiment-detail-bar {
+      width: 100px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, .06);
+      overflow: hidden;
+    }
+
+    .sentiment-detail-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease .5s;
+      width: 0
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .02);
+      border: 1px solid rgba(255, 255, 255, .05);
+      animation: fadeInUp .5s ease .65s forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .82rem;
+      color: var(--text-dim)
+    }
+
+    .stat-item .stat-value {
+      color: var(--text);
+      font-weight: 600
+    }
+
+    /* ── Toast ── */
+    .toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .toast {
+      padding: .9rem 1.4rem;
+      border-radius: 12px;
+      font-size: .88rem;
+      background: rgba(30, 30, 30, .95);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      animation: toastIn .3s ease;
+      max-width: 380px;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .toast.error {
+      border-color: rgba(239, 68, 68, .3);
+      color: var(--red)
+    }
+
+    .toast.success {
+      border-color: rgba(34, 197, 94, .3);
+      color: var(--green)
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(40px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes toastOut {
+      to {
+        opacity: 0;
+        transform: translateX(40px)
+      }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      color: var(--text-dim);
+      font-size: .8rem;
+      border-top: 1px solid rgba(255, 255, 255, .04);
+      margin-top: 4rem;
+    }
+
+    .footer a {
+      color: var(--blue);
+      text-decoration: none
+    }
+
+    .footer a:hover {
+      text-decoration: underline
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:640px) {
+      .container {
+        padding: 1.2rem 1rem
+      }
+
+      .hero {
+        padding: 2.5rem 0 2rem
+      }
+
+      .glass {
+        padding: 1.5rem
+      }
+
+      .sentiment-container {
+        flex-direction: column;
+        align-items: flex-start
+      }
+
+      .stats-bar {
+        flex-direction: column;
+        gap: .75rem
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="logo">DocuMind</div>
+      <h1>DocuMind AI</h1>
+      <p class="tagline">Intelligent Document Analysis Powered by AI</p>
+    </section>
+
+    <!-- Upload Card -->
+    <section class="glass">
+      <div class="upload-zone" id="uploadZone">
+        <span class="upload-icon">&#8682;</span>
+        <p>Drag &amp; drop your document here, or <strong style="color:var(--blue)">browse</strong></p>
+        <p class="file-types">Supports PDF, DOCX, PNG, JPG, JPEG, TIFF</p>
+        <input type="file" id="fileInput" accept=".pdf,.docx,.png,.jpg,.jpeg,.tiff,.tif,.bmp,.webp">
+      </div>
+      <div class="file-preview" id="filePreview">
+        <span id="fileIcon">&#128196;</span>
+        <span id="fileName"></span>
+        <span class="remove-file" id="removeFile">&times;</span>
+      </div>
+
+      <div class="api-section">
+        <div class="input-group">
+          <label>API Key</label>
+          <input type="text" id="apiKeyInput" placeholder="Enter your x-api-key" value="hcl_hack_api_key_2024_secure">
+        </div>
+      </div>
+
+      <button class="analyze-btn btn-pulse" id="analyzeBtn" disabled>
+        Analyze Document
+      </button>
+    </section>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="dna-helix">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="loading-text">Analyzing your document with AI...</p>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+      <!-- Summary -->
+      <div class="result-card glass" id="summaryCard">
+        <div class="card-header"><span class="icon">&#9889;</span> Summary</div>
+        <div class="summary-text" id="summaryText"></div>
+      </div>
+
+      <!-- Entities -->
+      <div class="result-card glass" id="entitiesCard">
+        <div class="card-header"><span class="icon">&#128278;</span> Named Entities</div>
+        <div id="entitiesContent"></div>
+      </div>
+
+      <!-- Sentiment -->
+      <div class="result-card glass" id="sentimentCard">
+        <div class="card-header"><span class="icon">&#127919;</span> Sentiment Analysis</div>
+        <div class="sentiment-container" id="sentimentContent"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar" id="statsBar"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      Built with FastAPI &amp; Transformers &mdash; DocuMind AI &copy; 2026
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      // ── Particles ──
+      const particlesEl = document.getElementById('particles');
+      for (let i = 0; i < 35; i++) {
+        const s = document.createElement('span');
+        const size = Math.random() * 3 + 1;
+        s.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random() * 100}%;
+      animation-duration:${Math.random() * 12 + 8}s;
+      animation-delay:${Math.random() * 10}s;
+    `;
+        particlesEl.appendChild(s);
+      }
+
+      // ── DOM refs ──
+      const uploadZone = document.getElementById('uploadZone');
+      const fileInput = document.getElementById('fileInput');
+      const filePreview = document.getElementById('filePreview');
+      const fileNameEl = document.getElementById('fileName');
+      const removeFile = document.getElementById('removeFile');
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const resultsEl = document.getElementById('results');
+      const summaryText = document.getElementById('summaryText');
+      const entitiesContent = document.getElementById('entitiesContent');
+      const sentimentContent = document.getElementById('sentimentContent');
+      const statsBar = document.getElementById('statsBar');
+
+      let selectedFile = null;
+
+      // ── Helpers ──
+      function toast(msg, type = 'error') {
+        const container = document.getElementById('toastContainer');
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.textContent = msg;
+        container.appendChild(t);
+        setTimeout(() => { t.style.animation = 'toastOut .3s ease forwards'; setTimeout(() => t.remove(), 300); }, 4000);
+      }
+
+      function getFileType(name) {
+        const ext = name.split('.').pop().toLowerCase();
+        if (ext === 'pdf') return 'pdf';
+        if (ext === 'docx') return 'docx';
+        if (['png', 'jpg', 'jpeg', 'tiff', 'tif', 'bmp', 'webp'].includes(ext)) return 'image';
+        return null;
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function updateBtnState() {
+        analyzeBtn.disabled = !(selectedFile && apiKeyInput.value.trim());
+      }
+
+      // ── File selection ──
+      function handleFile(file) {
+        const ft = getFileType(file.name);
+        if (!ft) { toast('Unsupported file type. Use PDF, DOCX, or image files.'); return; }
+        if (file.size > 20 * 1024 * 1024) { toast('File too large. Maximum 20MB.'); return; }
+        selectedFile = file;
+        fileNameEl.textContent = file.name;
+        filePreview.classList.add('show');
+        uploadZone.classList.add('has-file');
+        updateBtnState();
+      }
+
+      uploadZone.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+      uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+      uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+      uploadZone.addEventListener('drop', e => {
+        e.preventDefault(); uploadZone.classList.remove('drag-over');
+        if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+      });
+      removeFile.addEventListener('click', e => {
+        e.stopPropagation();
+        selectedFile = null; fileInput.value = '';
+        filePreview.classList.remove('show');
+        uploadZone.classList.remove('has-file');
+        updateBtnState();
+      });
+      apiKeyInput.addEventListener('input', updateBtnState);
+
+      // ── Typewriter ──
+      function typeWriter(el, text, speed = 12) {
+        el.innerHTML = '';
+        let i = 0;
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        function type() {
+          if (i < text.length) {
+            el.textContent = text.slice(0, ++i);
+            el.appendChild(cursor);
+            setTimeout(type, speed);
+          } else {
+            setTimeout(() => cursor.remove(), 2000);
+          }
+        }
+        type();
+      }
+
+      // ── Render entities ──
+      function renderEntities(entities) {
+        entitiesContent.innerHTML = '';
+        const groups = [
+          { key: 'names', label: 'People', cls: 'tag-name' },
+          { key: 'dates', label: 'Dates', cls: 'tag-date' },
+          { key: 'organizations', label: 'Organizations', cls: 'tag-org' },
+          { key: 'amounts', label: 'Amounts', cls: 'tag-amount' },
+        ];
+        let hasAny = false;
+        groups.forEach(g => {
+          const items = entities[g.key] || [];
+          if (!items.length) return;
+          hasAny = true;
+          const div = document.createElement('div');
+          div.className = 'entity-group';
+          div.innerHTML = `<div class="entity-label">${g.label}</div><div class="entity-tags">${items.map((item, i) => `<span class="entity-tag ${g.cls}" style="animation-delay:${i * 0.06}s">${item}</span>`).join('')
+            }</div>`;
+          entitiesContent.appendChild(div);
+        });
+        if (!hasAny) entitiesContent.innerHTML = '<p class="no-entities">No named entities detected.</p>';
+      }
+
+      // ── Render sentiment ──
+      function renderSentiment(sentiment) {
+        const label = (sentiment.label || sentiment.sentiment || 'neutral').toLowerCase();
+        const score = sentiment.score != null ? sentiment.score : (sentiment.confidence || 0);
+        const emojis = { positive: '&#128578;', negative: '&#128577;', neutral: '&#128528;' };
+        const colors = { positive: 'var(--green)', negative: 'var(--red)', neutral: 'var(--text-dim)' };
+        const rotation = -90 + (score * 360);
+        const breakdown = sentiment.scores || sentiment.breakdown || {};
+        const pos = breakdown.positive || (label === 'positive' ? score : 0);
+        const neg = breakdown.negative || (label === 'negative' ? score : 0);
+        const neu = breakdown.neutral || (label === 'neutral' ? score : 0);
+
+        sentimentContent.innerHTML = `
       <div class="gauge-wrapper">
         <div class="gauge-bg"></div>
-        <div class="gauge-fill" style="border-top-color:${colors[label]||colors.neutral};transform:rotate(${rotation}deg)"></div>
+        <div class="gauge-fill" style="border-top-color:${colors[label] || colors.neutral};transform:rotate(${rotation}deg)"></div>
         <div class="gauge-label">
-          <span class="gauge-emoji">${emojis[label]||emojis.neutral}</span>
-          <span class="gauge-value" style="color:${colors[label]||colors.neutral}">${label}</span>
+          <span class="gauge-emoji">${emojis[label] || emojis.neutral}</span>
+          <span class="gauge-value" style="color:${colors[label] || colors.neutral}">${label}</span>
         </div>
       </div>
       <div class="sentiment-details">
         <div class="sentiment-detail-row"><span class="sentiment-detail-label">Positive</span>
-          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${pos*100}%;background:var(--green)"></div></div></div>
+          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${pos * 100}%;background:var(--green)"></div></div></div>
         <div class="sentiment-detail-row"><span class="sentiment-detail-label">Neutral</span>
-          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${neu*100}%;background:var(--text-dim)"></div></div></div>
+          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${neu * 100}%;background:var(--text-dim)"></div></div></div>
         <div class="sentiment-detail-row"><span class="sentiment-detail-label">Negative</span>
-          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${neg*100}%;background:var(--red)"></div></div></div>
+          <div class="sentiment-detail-bar"><div class="sentiment-detail-bar-fill" style="width:${neg * 100}%;background:var(--red)"></div></div></div>
         <div class="sentiment-detail-row"><span class="sentiment-detail-label">Confidence</span>
-          <span style="font-size:.85rem;font-weight:600;color:${colors[label]||colors.neutral}">${(score*100).toFixed(1)}%</span></div>
+          <span style="font-size:.85rem;font-weight:600;color:${colors[label] || colors.neutral}">${(score * 100).toFixed(1)}%</span></div>
       </div>`;
-    // Trigger bar animation
-    setTimeout(() => {
-      sentimentContent.querySelectorAll('.sentiment-detail-bar-fill').forEach(b => {
-        const w = b.style.width; b.style.width = '0'; b.offsetHeight; b.style.width = w;
-      });
-    }, 50);
-  }
+        // Trigger bar animation
+        setTimeout(() => {
+          sentimentContent.querySelectorAll('.sentiment-detail-bar-fill').forEach(b => {
+            const w = b.style.width; b.style.width = '0'; b.offsetHeight; b.style.width = w;
+          });
+        }, 50);
+      }
 
-  // ── Analyze ──
-  analyzeBtn.addEventListener('click', async () => {
-    if (!selectedFile || !apiKeyInput.value.trim()) return;
+      // ── Analyze ──
+      analyzeBtn.addEventListener('click', async () => {
+        if (!selectedFile || !apiKeyInput.value.trim()) return;
 
-    const apiKey = apiKeyInput.value.trim();
-    const fileType = getFileType(selectedFile.name);
+        const apiKey = apiKeyInput.value.trim();
+        const fileType = getFileType(selectedFile.name);
 
-    // Show loading
-    resultsEl.classList.remove('show');
-    loadingOverlay.classList.add('show');
-    analyzeBtn.disabled = true;
-    analyzeBtn.textContent = 'Analyzing...';
+        // Show loading
+        resultsEl.classList.remove('show');
+        loadingOverlay.classList.add('show');
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = 'Analyzing...';
 
-    const startTime = performance.now();
+        const startTime = performance.now();
 
-    try {
-      const base64 = await fileToBase64(selectedFile);
-      const res = await fetch('/api/document-analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-        body: JSON.stringify({ fileName: selectedFile.name, fileType, fileBase64: base64 }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.status === 'error') throw new Error(data.message || `Server error (${res.status})`);
+        try {
+          const base64 = await fileToBase64(selectedFile);
+          const res = await fetch('http://127.0.0.1:8000/api/document-analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+            body: JSON.stringify({ fileName: selectedFile.name, fileType, fileBase64: base64 }),
+          });
+          const data = await res.json();
+          if (!res.ok || data.status === 'error') throw new Error(data.message || `Server error (${res.status})`);
 
-      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-      loadingOverlay.classList.remove('show');
+          const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+          loadingOverlay.classList.remove('show');
 
-      // Render results
-      typeWriter(summaryText, data.summary || 'No summary available.');
-      renderEntities(data.entities || {});
-      renderSentiment(data.sentiment || {});
+          // Render results
+          typeWriter(summaryText, data.summary || 'No summary available.');
+          renderEntities(data.entities || {});
+          renderSentiment(data.sentiment || {});
 
-      statsBar.innerHTML = `
+          statsBar.innerHTML = `
         <div class="stat-item">&#128196; File: <span class="stat-value">${data.fileName || selectedFile.name}</span></div>
         <div class="stat-item">&#128229; Type: <span class="stat-value">${fileType.toUpperCase()}</span></div>
         <div class="stat-item">&#9201; Processing: <span class="stat-value">${elapsed}s</span></div>
       `;
 
-      resultsEl.classList.add('show');
-      toast('Analysis complete!', 'success');
-      setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+          resultsEl.classList.add('show');
+          toast('Analysis complete!', 'success');
+          setTimeout(() => resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
 
-    } catch (err) {
-      loadingOverlay.classList.remove('show');
-      toast(err.message || 'Something went wrong.');
-    } finally {
-      analyzeBtn.disabled = false;
-      analyzeBtn.textContent = 'Analyze Document';
-      updateBtnState();
-    }
-  });
-})();
-</script>
+        } catch (err) {
+          loadingOverlay.classList.remove('show');
+          toast(err.message || 'Something went wrong.');
+        } finally {
+          analyzeBtn.disabled = false;
+          analyzeBtn.textContent = 'Analyze Document';
+          updateBtnState();
+        }
+      });
+    })();
+  </script>
 </body>
+
 </html>
