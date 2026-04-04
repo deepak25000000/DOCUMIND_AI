@@ -219,6 +219,39 @@ async def analyze_file(
         )
 
 
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "detail": exc.detail,
+            "status": "error",
+            "message": str(exc.detail),
+            "fileName": "error.txt",
+            "summary": f"HTTP Error: {exc.detail}",
+            "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]},
+            "sentiment": "Neutral"
+        }
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "detail": exc.errors(),
+            "status": "error",
+            "message": "Validation Error",
+            "fileName": "error.txt",
+            "summary": "Validation Error",
+            "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]},
+            "sentiment": "Neutral"
+        }
+    )
+
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
