@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-docx
+pdfplumber
+Pillow
+pytesseract
+opencv-python-headless
+google-generativeai
+python-dotenv
+aiofiles

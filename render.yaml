@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: doc-analysis-api
+    env: docker
+    plan: standard
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: API_KEY
+        value: hcl_hack_api_key_2024_secure
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 8000
+    healthCheckPath: /health
