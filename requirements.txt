@@ -5,7 +5,7 @@ python-docx
 pdfplumber
 Pillow
 pytesseract
-opencv-python-headless-headless
+opencv-python-headless
 google-generativeai
 python-dotenv
 aiofiles
