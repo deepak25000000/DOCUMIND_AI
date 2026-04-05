@@ -984,22 +984,10 @@
       });
       apiKeyInput.addEventListener('input', updateBtnState);
 
-      // ── Typewriter ──
-      function typeWriter(el, text, speed = 12) {
+      // ── Typewriter (Disabled for Instant Feedback) ──
+      function typeWriter(el, text, speed = 1) {
         el.innerHTML = '';
-        let i = 0;
-        const cursor = document.createElement('span');
-        cursor.className = 'cursor';
-        function type() {
-          if (i < text.length) {
-            el.textContent = text.slice(0, ++i);
-            el.appendChild(cursor);
-            setTimeout(type, speed);
-          } else {
-            setTimeout(() => cursor.remove(), 2000);
-          }
-        }
-        type();
+        el.textContent = text;
       }
 
       // ── Render entities ──
@@ -1081,7 +1069,7 @@
 
         try {
           const base64 = await fileToBase64(selectedFile);
-          const res = await fetch('http://127.0.0.1:8000/api/document-analyze', {
+          const res = await fetch('/api/document-analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
             body: JSON.stringify({ fileName: selectedFile.name, fileType, fileBase64: base64 }),
