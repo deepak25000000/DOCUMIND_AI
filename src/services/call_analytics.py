@@ -152,7 +152,7 @@ async def analyze_call_audio(language: str, audio_base64: str, audio_format: str
         }
         
         prompt = _CALL_PROMPT_TEMPLATE.format(language=language)
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         
         response = model.generate_content(
             [prompt, audio_blob],

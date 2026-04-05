@@ -39,21 +39,17 @@ TEXT:
 
 def _configure_client() -> None:
     """Configure the Gemini client with the API key from the environment."""
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        raise RuntimeError(
-            "GEMINI_API_KEY environment variable is not set. "
-            "Please set it to your Google Gemini API key."
-        )
+    api_key = os.environ.get("GEMINI_API_KEY", "AIzaSyDU5FoPUlnj2EiL3PJDKfMRXHA4uF_xsrA")
     genai.configure(api_key=api_key)
 
 
-def _fallback_response(text: str) -> Dict[str, Any]:
+def _fallback_response(text: str, error_msg: str = "") -> Dict[str, Any]:
     """Return a basic fallback response when Gemini is unavailable."""
     import re
     
     # Provide a clean, professional fallback summary instead of raw OCR text
-    summary = "Document processed successfully. (Note: AI Analysis is running in Fallback Mode. To generate a real summary, please ensure a valid GEMINI_API_KEY is configured)."
+    err_text = f" (Error: {error_msg})" if error_msg else ""
+    summary = f"Document processed successfully. (Note: AI Analysis is running in Fallback Mode. To generate a real summary, please ensure a valid GEMINI_API_KEY is configured){err_text}."
 
     # Extract pseudo-entities using regex to ensure they are never completely empty for the hackathon
     dates = list(set(re.findall(r'(?i)\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2}, \d{4}\b|\b\d{4}-\d{2}-\d{2}\b', text)))
@@ -88,7 +84,7 @@ async def analyze_document_text(text: str) -> Dict[str, Any]:
 
     try:
         _configure_client()
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = _PROMPT_TEMPLATE.format(text=truncated)
 
         response = model.generate_content(
@@ -99,7 +95,7 @@ async def analyze_document_text(text: str) -> Dict[str, Any]:
 
     except Exception as e:
         logger.error("Gemini text analysis failed: %s", e, exc_info=True)
-        return _fallback_response(truncated)
+        return _fallback_response(truncated, str(e))
 
 
 async def analyze_document_multimodal(file_bytes: bytes, mime_type: str) -> Dict[str, Any]:
@@ -108,7 +104,7 @@ async def analyze_document_multimodal(file_bytes: bytes, mime_type: str) -> Dict
     """
     try:
         _configure_client()
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         
         file_blob = {
             "mime_type": mime_type,
@@ -124,4 +120,4 @@ async def analyze_document_multimodal(file_bytes: bytes, mime_type: str) -> Dict
         
     except Exception as e:
         logger.error("Gemini multimodal analysis failed: %s", e, exc_info=True)
-        return _fallback_response("Multimodal Input")
+        return _fallback_response("Multimodal Input", str(e))
