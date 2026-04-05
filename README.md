@@ -13,7 +13,7 @@ This project implements the Track 3: Call Center Compliance API for automated qu
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set environment variables based on `.env.example`
    - Ensure `GEMINI_API_KEY` is present.
-4. Run the application: `uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload`
+4. Run the application: `uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload`
 
 ## Approach
 The solution leverages the direct multimodal input capability of Gemini 2.5 Flash, which allows parsing MP3 audio files to perform seamless zero-shot transcription combined with structured JSON extraction strictly following the Hackathon's standard rubrics, directly bypassing standard localized dependencies.

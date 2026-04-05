@@ -17,11 +17,11 @@ from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
-from app.auth import verify_api_key
-from app.file_detector import detect_file_type
-from app.text_extractor import extract_text
-from app.text_processor import process_text
-from app.ai_modules import analyze_document
+from src.utils.auth import verify_api_key
+from src.utils.file_detector import detect_file_type
+from src.services.text_extractor import extract_text
+from src.services.text_processor import process_text
+from src.services.ai_modules import analyze_document
 
 load_dotenv()
 
@@ -47,7 +47,7 @@ class CallAnalyticsRequest(BaseModel):
     audioBase64: str
 
 from typing import Optional
-from app.call_analytics import analyze_call_audio
+from src.services.call_analytics import analyze_call_audio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -358,10 +358,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # ---------------------------------------------------------------------------
-# Run with: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# Run with: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run("app.main:app", host=host, port=port, reload=True)
+    uvicorn.run("src.main:app", host=host, port=port, reload=True)

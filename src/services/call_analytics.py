@@ -91,13 +91,13 @@ async def analyze_call_audio(language: str, audio_base64: str, audio_format: str
         prompt = _CALL_PROMPT_TEMPLATE.format(language=language)
         model = genai.GenerativeModel("gemini-2.5-flash")
         
-        response = model.generate_content([prompt, audio_blob])
+        response = model.generate_content(
+            [prompt, audio_blob],
+            generation_config=genai.types.GenerationConfig(
+                response_mime_type="application/json",
+            )
+        )
         raw = response.text.strip()
-        
-        if raw.startswith("```"):
-            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
-        if raw.endswith("```"):
-            raw = raw[:-3].rstrip()
             
         result = json.loads(raw)
         result["status"] = "success"
