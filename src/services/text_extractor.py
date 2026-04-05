@@ -8,11 +8,9 @@ Extracts text from PDF, DOCX, and image files.
 import io
 import os
 import sys
-import numpy as np
-from PIL import Image
-import cv2
-import pytesseract
-import pdfplumber
+import io
+import os
+import sys
 from docx import Document
 
 # Configure Tesseract path for Windows
@@ -28,26 +26,7 @@ if sys.platform == "win32":
 
 
 def extract_from_pdf(file_bytes: bytes) -> str:
-    """Extract text from PDF preserving layout structure."""
-    text_parts = []
-    with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
-        for page_num, page in enumerate(pdf.pages, 1):
-            page_text = page.extract_text()
-            if page_text:
-                text_parts.append(page_text)
-            
-            # Also try extracting from tables
-            tables = page.extract_tables()
-            for table in tables:
-                for row in table:
-                    if row:
-                        row_text = " | ".join(
-                            cell.strip() if cell else "" for cell in row
-                        )
-                        if row_text.strip(" |"):
-                            text_parts.append(row_text)
-    
-    return "\n\n".join(text_parts)
+    raise ValueError("PDFs should now be processed by multimodal Gemini endpoint.")
 
 
 def extract_from_docx(file_bytes: bytes) -> str:
@@ -79,55 +58,8 @@ def extract_from_docx(file_bytes: bytes) -> str:
     return "\n".join(text_parts)
 
 
-def preprocess_image(image: Image.Image) -> np.ndarray:
-    """
-    Preprocess image for better OCR accuracy.
-    - Convert to grayscale
-    - Noise reduction
-    - Adaptive thresholding
-    """
-    # Convert PIL Image to numpy array
-    img_array = np.array(image)
-    
-    # Convert to grayscale if needed
-    if len(img_array.shape) == 3:
-        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-    else:
-        gray = img_array
-    
-    # Noise reduction using Gaussian blur  
-    denoised = cv2.GaussianBlur(gray, (3, 3), 0)
-    
-    # Adaptive thresholding for better text contrast
-    thresh = cv2.adaptiveThreshold(
-        denoised, 255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY, 11, 2
-    )
-    
-    return thresh
-
-
 def extract_from_image(file_bytes: bytes) -> str:
-    """Extract text from image using Tesseract OCR with preprocessing."""
-    # Open image
-    image = Image.open(io.BytesIO(file_bytes))
-    
-    # Convert to RGB if necessary (handle RGBA, palette, etc.)
-    if image.mode not in ("RGB", "L"):
-        image = image.convert("RGB")
-    
-    # Preprocess for better OCR
-    processed = preprocess_image(image)
-    
-    # Convert back to PIL Image for pytesseract
-    processed_image = Image.fromarray(processed)
-    
-    # Run Tesseract OCR with optimized config
-    custom_config = r'--oem 3 --psm 6'
-    text = pytesseract.image_to_string(processed_image, config=custom_config)
-    
-    return text
+    raise ValueError("Images should now be processed by multimodal Gemini endpoint.")
 
 
 def extract_text(file_bytes: bytes, file_type: str) -> str:
