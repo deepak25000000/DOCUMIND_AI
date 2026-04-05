@@ -45,9 +45,7 @@ Provide your analysis strictly as a valid JSON object matching the exact structu
 """
 
 def _configure_client() -> None:
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        raise RuntimeError("GEMINI_API_KEY environment variable is not set.")
+    api_key = os.environ.get("GEMINI_API_KEY", "AIzaSyDU5FoPUlnj2EiL3PJDKfMRXHA4uF_xsrA")
     genai.configure(api_key=api_key)
 
 def _fallback_call_response(language: str) -> Dict[str, Any]:

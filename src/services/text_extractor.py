@@ -3,11 +3,8 @@ Text Extraction Module
 Extracts text from PDF, DOCX, and image files.
 - PDF: pdfplumber for layout-aware extraction
 - DOCX: python-docx for paragraphs and headings
-- Image: OpenCV preprocessing + Tesseract OCR
+- Image: Handled by Gemini multimodal
 """
-import io
-import os
-import sys
 import io
 import os
 import sys
