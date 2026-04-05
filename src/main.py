@@ -21,7 +21,7 @@ from src.utils.auth import verify_api_key
 from src.utils.file_detector import detect_file_type
 from src.services.text_extractor import extract_text
 from src.services.text_processor import process_text
-from src.services.ai_modules import analyze_document
+from src.services.ai_modules import analyze_document_text, analyze_document_multimodal
 
 load_dotenv()
 
@@ -163,52 +163,23 @@ async def analyze_file(
                 },
             )
 
-        # ---- 3. Extract text ----
-        logger.info("Extracting text...")
+        # ---- 3. Extract text or Route Multimodal ----
+        logger.info("Routing analysis...")
         try:
-            raw_text = extract_text(file_bytes, request.fileType)
-        except ValueError as e:
-            return JSONResponse(
-                status_code=422,
-                content={
-                    "status": "error", "message": str(e),
-                    "fileName": request.fileName, "summary": f"Error: {str(e)}",
-                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]}, "sentiment": "Neutral"
-                },
-            )
+            if request.fileType in ("pdf", "image"):
+                mime = "application/pdf" if request.fileType == "pdf" else "image/jpeg"
+                ai_results = await analyze_document_multimodal(file_bytes, mime)
+            else:
+                raw_text = extract_text(file_bytes, request.fileType)
+                cleaned_text = process_text(raw_text)
+                if not cleaned_text:
+                    return JSONResponse(
+                        status_code=422,
+                        content={"status": "error", "message": "No meaningful text extracted."}
+                    )
+                ai_results = await analyze_document_text(cleaned_text)
         except Exception as e:
-            logger.error(f"Text extraction error: {e}")
-            return JSONResponse(
-                status_code=500,
-                content={
-                    "status": "error",
-                    "message": f"Failed to extract text from {request.fileType} file: {str(e)}",
-                    "fileName": request.fileName,
-                    "summary": f"Error: Could not extract text. {str(e)}",
-                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]},
-                    "sentiment": "Neutral"
-                },
-            )
-
-        # ---- 4. Process/clean text ----
-        logger.info("Processing text...")
-        cleaned_text = process_text(raw_text)
-
-        if not cleaned_text:
-            return JSONResponse(
-                status_code=422,
-                content={
-                    "status": "error", "message": "No meaningful text extracted from the file.",
-                    "fileName": request.fileName, "summary": "Error: No meaningful text extracted.",
-                    "entities": {"names":[],"dates":[],"organizations":[],"amounts":[]}, "sentiment": "Neutral"
-                },
-            )
-
-        logger.info(f"Extracted {len(cleaned_text)} characters of text")
-
-        # ---- 5. Run AI analysis ----
-        logger.info("Running AI analysis (summarization, NER, sentiment)...")
-        ai_results = await analyze_document(cleaned_text)
+            return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
 
         # ---- 6. Build response ----
         processing_time = round(time.time() - start_time, 2)

@@ -79,27 +79,11 @@ def _fallback_response(text: str) -> Dict[str, Any]:
     }
 
 
-async def analyze_document(text: str) -> Dict[str, Any]:
-    """
-    Run summarization, NER, and sentiment analysis on the given text
-    via a single Google Gemini API call.
-
-    Returns:
-        {
-            "summary": str,
-            "entities": {
-                "names": [str],
-                "dates": [str],
-                "organizations": [str],
-                "amounts": [str],
-            },
-            "sentiment": "Positive" | "Negative" | "Neutral",
-        }
-    """
+async def analyze_document_text(text: str) -> Dict[str, Any]:
+    """Run NLP analysis on the extracted plain text string."""
     if not text or not text.strip():
         return _fallback_response("")
 
-    # Truncate to stay within token limits
     truncated = text[:_MAX_INPUT_CHARS]
 
     try:
@@ -107,41 +91,37 @@ async def analyze_document(text: str) -> Dict[str, Any]:
         model = genai.GenerativeModel("gemini-2.5-flash")
         prompt = _PROMPT_TEMPLATE.format(text=truncated)
 
-        response = model.generate_content(prompt)
-        raw = response.text.strip()
-
-        # Strip markdown fences if the model included them despite instructions
-        if raw.startswith("```"):
-            # Remove opening fence (```json or ```)
-            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
-        if raw.endswith("```"):
-            raw = raw[:-3].rstrip()
-
-        result = json.loads(raw)
-
-        # Validate and normalise the response structure
-        summary = result.get("summary", "")
-        if not isinstance(summary, str):
-            summary = str(summary)
-
-        entities_raw = result.get("entities", {})
-        entities = {
-            "names": list(entities_raw.get("names", [])),
-            "dates": list(entities_raw.get("dates", [])),
-            "organizations": list(entities_raw.get("organizations", [])),
-            "amounts": list(entities_raw.get("amounts", [])),
-        }
-
-        sentiment = result.get("sentiment", "Neutral")
-        if sentiment not in ("Positive", "Negative", "Neutral"):
-            sentiment = "Neutral"
-
-        return {
-            "summary": summary,
-            "entities": entities,
-            "sentiment": sentiment,
-        }
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(response_mime_type="application/json")
+        )
+        return json.loads(response.text.strip())
 
     except Exception as e:
-        logger.error("Gemini analysis failed: %s", e, exc_info=True)
+        logger.error("Gemini text analysis failed: %s", e, exc_info=True)
         return _fallback_response(truncated)
+
+
+async def analyze_document_multimodal(file_bytes: bytes, mime_type: str) -> Dict[str, Any]:
+    """
+    Bypass heavy OCR and PDF parsing natively; pipe bytes directly into Gemini.
+    """
+    try:
+        _configure_client()
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        
+        file_blob = {
+            "mime_type": mime_type,
+            "data": file_bytes
+        }
+        prompt = _PROMPT_TEMPLATE.format(text="(Analyzing direct multimodal input from uploaded file blob)")
+        
+        response = model.generate_content(
+            [prompt, file_blob],
+            generation_config=genai.types.GenerationConfig(response_mime_type="application/json")
+        )
+        return json.loads(response.text.strip())
+        
+    except Exception as e:
+        logger.error("Gemini multimodal analysis failed: %s", e, exc_info=True)
+        return _fallback_response("Multimodal Input")
