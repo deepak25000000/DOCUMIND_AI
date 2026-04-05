@@ -166,8 +166,8 @@ async def analyze_file(
         # ---- 3. Extract text or Route Multimodal ----
         logger.info("Routing analysis...")
         try:
-            if request.fileType in ("pdf", "image"):
-                mime = "application/pdf" if request.fileType == "pdf" else "image/jpeg"
+            if request.fileType == "image":
+                mime = "image/jpeg"
                 ai_results = await analyze_document_multimodal(file_bytes, mime)
             else:
                 raw_text = extract_text(file_bytes, request.fileType)

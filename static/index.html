@@ -239,6 +239,112 @@
       opacity: 1
     }
 
+    /* ── Crazy Docs Modal ── */
+    .floating-docs-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .floating-docs-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 35px rgba(0, 212, 255, 0.6);
+    }
+
+    .docs-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .docs-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .docs-modal {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .docs-modal-overlay.active .docs-modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .docs-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .docs-close:hover {
+      color: var(--red);
+    }
+
+    .docs-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .docs-content h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .docs-content p,
+    .docs-content li {
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
+    }
+
+    .docs-content ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
     /* ── API key input ── */
     .api-section {
       margin-top: 1.5rem
@@ -890,8 +996,65 @@
       Built with FastAPI &amp; Transformers &mdash; DocuMind AI &copy; 2026
     </footer>
   </div>
+  <!-- Crazy Docs Modal & Floating Button -->
+  <button class="floating-docs-btn" id="docsOpenBtn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+    </svg>
+    Docs
+  </button>
+
+  <div class="docs-modal-overlay" id="docsOverlay">
+    <div class="docs-modal" id="docsModal">
+      <button class="docs-close" id="docsCloseBtn">&times;</button>
+      <div class="docs-content">
+        <h2>DocuMind AI System Architecture</h2>
+        <p>Welcome to the ultimate Hackathon documentation hub! DocuMind AI is engineered to be a blazingly fast,
+          multi-modal content analyzer and compliance engine running on a robust FastAPI foundation.</p>
+
+        <h3>Core Features</h3>
+        <ul>
+          <li><strong>Zero-Latency Local Fallback:</strong> If the cloud AI hits rate limit quotas, the local NLP engine
+            instantly intercepts, extracts text using <code>pdfplumber</code>, and deterministically summarizes exactly
+            what you uploaded without crashing.</li>
+          <li><strong>Multimodal Engine:</strong> Natively routes image byte-streams straight into Gemini 2.0 Flash for
+            instant OCR+NLP analysis.</li>
+          <li><strong>Call Center Compliance:</strong> Dedicated hidden endpoints enforce rigorous SOP extraction,
+            generating pristine JSON for validation.</li>
+        </ul>
+
+        <h3>Hackathon Highlights</h3>
+        <ul>
+          <li><strong>Glassmorphism UI:</strong> Ultra-modern floating interface powered by pure CSS animations and
+            dynamic routing.</li>
+          <li><strong>Edge-Ready:</strong> Heavy ML dependencies (like PyTesseract & OpenCV) have been systematically
+            stripped to ensure instantaneous Vercel cold-starts.</li>
+        </ul>
+        <p style="margin-top:2rem; font-size:0.8rem; text-align:center;">Built for performance. Secured by design.
+          Powered by Gemini.</p>
+      </div>
+    </div>
+  </div>
 
   <script>
+    // Docs Modal Logic
+    document.getElementById('docsOpenBtn').addEventListener('click', () => {
+      document.getElementById('docsOverlay').classList.add('active');
+    });
+    document.getElementById('docsCloseBtn').addEventListener('click', () => {
+      document.getElementById('docsOverlay').classList.remove('active');
+    });
+    document.getElementById('docsOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('docsOverlay')) {
+        document.getElementById('docsOverlay').classList.remove('active');
+      }
+    });
+
     (() => {
       // ── Particles ──
       const particlesEl = document.getElementById('particles');
