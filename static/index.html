@@ -1,411 +1,1491 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocuMind AI  Call Center Compliance AI System</title>
+  <title>DocuMind AI Call Center Compliance AI System</title>
   <meta name="description" content="AI-Powered Document Analysis and Call Center Compliance System">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--black:#06060b;--card:rgba(255,255,255,0.035);--card-border:rgba(255,255,255,0.07);--blue:#00d4ff;--purple:#8b5cf6;--pink:#ec4899;--text:#e4e4e7;--text-dim:#71717a;--green:#22c55e;--gold:#f59e0b;--red:#ef4444}
-    html{scroll-behavior:smooth}
-    body{font-family:'Inter',system-ui,sans-serif;background:var(--black);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.6}
-    body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(139,92,246,.12),transparent 70%)}
-    .particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-    .particles span{position:absolute;display:block;border-radius:50%;background:var(--blue);opacity:0;animation:floatUp linear infinite}
-    @keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.4}90%{opacity:.1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
-    @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-    @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(139,92,246,.2)}50%{box-shadow:0 0 40px rgba(0,212,255,.3)}}
-    .container{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:2rem 1.5rem}
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --black: #06060b;
+      --card: rgba(255, 255, 255, 0.035);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --blue: #00d4ff;
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --text: #e4e4e7;
+      --text-dim: #71717a;
+      --green: #22c55e;
+      --gold: #f59e0b;
+      --red: #ef4444
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, .12), transparent 70%)
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden
+    }
+
+    .particles span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      background: var(--blue);
+      opacity: 0;
+      animation: floatUp linear infinite
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0
+      }
+
+      10% {
+        opacity: .4
+      }
+
+      90% {
+        opacity: .1
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0
+      }
+    }
+
+    @keyframes grad {
+
+      0%,
+      100% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .4
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      25% {
+        transform: translateX(-5px)
+      }
+
+      75% {
+        transform: translateX(5px)
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(139, 92, 246, .2)
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(0, 212, 255, .3)
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem
+    }
+
     /* AUTH */
-    .auth-wrapper{position:relative;z-index:1;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:2rem}
-    .auth-card{background:rgba(12,12,20,.85);border:1px solid var(--card-border);border-radius:24px;backdrop-filter:blur(24px);padding:2.8rem;width:100%;max-width:440px;animation:fadeIn .6s ease;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-    .auth-logo{text-align:center;margin-bottom:1.8rem}
-    .auth-logo .logo-icon{font-size:3rem;margin-bottom:.5rem;display:block}
-    .auth-logo h1{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .auth-logo p{color:var(--text-dim);font-size:.85rem;margin-top:.3rem}
-    .auth-input{width:100%;padding:.85rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:12px;color:var(--text);font-size:.9rem;font-family:inherit;outline:none;transition:all .3s;margin-bottom:1rem}
-    .auth-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,212,255,.08)}
-    .auth-input.error{border-color:var(--red);animation:shake .3s ease}
-    .auth-label{display:block;font-size:.82rem;font-weight:600;color:var(--text-dim);margin-bottom:.4rem;letter-spacing:.03em}
-    .auth-btn{width:100%;padding:1rem;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;box-shadow:0 4px 20px rgba(139,92,246,.25);margin-top:.5rem}
-    .auth-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,255,.3)}
-    .google-btn{width:100%;padding:.9rem;border:1px solid var(--card-border);border-radius:14px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s;background:rgba(255,255,255,.04);color:var(--text);display:flex;align-items:center;justify-content:center;gap:.6rem}
-    .google-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15)}
-    .google-btn svg{width:20px;height:20px}
-    .auth-switch{text-align:center;margin-top:1.2rem;font-size:.85rem;color:var(--text-dim)}
-    .auth-switch a{color:var(--blue);text-decoration:none;font-weight:600;cursor:pointer}
-    .auth-switch a:hover{text-decoration:underline}
-    .auth-error{color:var(--red);font-size:.82rem;margin-bottom:.8rem;display:none}
-    .auth-divider{display:flex;align-items:center;gap:1rem;margin:1.2rem 0;color:var(--text-dim);font-size:.78rem}
-    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--card-border)}
+    .auth-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem
+    }
+
+    .auth-card {
+      background: rgba(12, 12, 20, .85);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      backdrop-filter: blur(24px);
+      padding: 2.8rem;
+      width: 100%;
+      max-width: 440px;
+      animation: fadeIn .6s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5)
+    }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 1.8rem
+    }
+
+    .auth-logo .logo-icon {
+      font-size: 3rem;
+      margin-bottom: .5rem;
+      display: block
+    }
+
+    .auth-logo h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .auth-logo p {
+      color: var(--text-dim);
+      font-size: .85rem;
+      margin-top: .3rem
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: .85rem 1rem;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: .9rem;
+      font-family: inherit;
+      outline: none;
+      transition: all .3s;
+      margin-bottom: 1rem
+    }
+
+    .auth-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, .08)
+    }
+
+    .auth-input.error {
+      border-color: var(--red);
+      animation: shake .3s ease
+    }
+
+    .auth-label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: .4rem;
+      letter-spacing: .03em
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .3s;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, .25);
+      margin-top: .5rem
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 212, 255, .3)
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: .9rem;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s;
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem
+    }
+
+    .google-btn:hover {
+      background: rgba(255, 255, 255, .08);
+      border-color: rgba(255, 255, 255, .15)
+    }
+
+    .google-btn svg {
+      width: 20px;
+      height: 20px
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: .85rem;
+      color: var(--text-dim)
+    }
+
+    .auth-switch a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline
+    }
+
+    .auth-error {
+      color: var(--red);
+      font-size: .82rem;
+      margin-bottom: .8rem;
+      display: none
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.2rem 0;
+      color: var(--text-dim);
+      font-size: .78rem
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--card-border)
+    }
+
     /* NAV */
-    .nav-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;gap:1rem;flex-wrap:wrap}
-    .nav-tabs{display:flex;gap:.4rem;background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:.35rem;backdrop-filter:blur(12px);flex:1}
-    .nav-tab{flex:1;padding:.7rem;text-align:center;border:none;background:transparent;color:var(--text-dim);font-weight:600;font-size:.83rem;border-radius:10px;cursor:pointer;transition:all .3s}
-    .nav-tab.active{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;box-shadow:0 4px 15px rgba(139,92,246,.25)}
-    .nav-tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,.05)}
-    .nav-right{display:flex;gap:.5rem;align-items:center}
-    .user-badge{padding:.45rem .9rem;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:10px;color:var(--green);font-size:.78rem;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:.4rem}
-    .user-badge img{width:22px;height:22px;border-radius:50%}
-    .logout-btn{padding:.55rem 1rem;border:1px solid rgba(239,68,68,.2);background:rgba(239,68,68,.06);color:var(--red);border-radius:10px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .3s;white-space:nowrap}
-    .logout-btn:hover{background:rgba(239,68,68,.15)}
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: .4rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: .35rem;
+      backdrop-filter: blur(12px);
+      flex: 1
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: .7rem;
+      text-align: center;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: .83rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .3s
+    }
+
+    .nav-tab.active {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, .25)
+    }
+
+    .nav-tab:hover:not(.active) {
+      color: var(--text);
+      background: rgba(255, 255, 255, .05)
+    }
+
+    .nav-right {
+      display: flex;
+      gap: .5rem;
+      align-items: center
+    }
+
+    .user-badge {
+      padding: .45rem .9rem;
+      background: rgba(34, 197, 94, .06);
+      border: 1px solid rgba(34, 197, 94, .15);
+      border-radius: 10px;
+      color: var(--green);
+      font-size: .78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: .4rem
+    }
+
+    .user-badge img {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%
+    }
+
+    .logout-btn {
+      padding: .55rem 1rem;
+      border: 1px solid rgba(239, 68, 68, .2);
+      background: rgba(239, 68, 68, .06);
+      color: var(--red);
+      border-radius: 10px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s;
+      white-space: nowrap
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, .15)
+    }
+
     /* HERO */
-    .hero{text-align:center;padding:2rem 0 1.5rem}
-    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:20px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.15);font-size:.78rem;color:#c4b5fd;font-weight:600;margin-bottom:1rem}
-    .hero h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:900;line-height:1.1;background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink),var(--blue));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:grad 6s ease infinite}
-    .hero .tagline{margin-top:.8rem;font-size:1rem;color:var(--text-dim);max-width:600px;margin-inline:auto;line-height:1.7}
-    .hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap}
-    .hero-stat{text-align:center}
-    .hero-stat .num{font-size:1.6rem;font-weight:800;color:var(--blue)}
-    .hero-stat .lbl{font-size:.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+    .hero {
+      text-align: center;
+      padding: 2rem 0 1.5rem
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .4rem 1rem;
+      border-radius: 20px;
+      background: rgba(139, 92, 246, .08);
+      border: 1px solid rgba(139, 92, 246, .15);
+      font-size: .78rem;
+      color: #c4b5fd;
+      font-weight: 600;
+      margin-bottom: 1rem
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink), var(--blue));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: grad 6s ease infinite
+    }
+
+    .hero .tagline {
+      margin-top: .8rem;
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin-inline: auto;
+      line-height: 1.7
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap
+    }
+
+    .hero-stat {
+      text-align: center
+    }
+
+    .hero-stat .num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--blue)
+    }
+
+    .hero-stat .lbl {
+      font-size: .72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: .08em
+    }
+
     /* GLASS */
-    .glass{background:var(--card);border:1px solid var(--card-border);border-radius:18px;backdrop-filter:blur(12px);padding:2rem;transition:all .3s}
-    .glass:hover{border-color:rgba(255,255,255,.1)}
-    .page{display:none}.page.active{display:block}
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      transition: all .3s
+    }
+
+    .glass:hover {
+      border-color: rgba(255, 255, 255, .1)
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
     /* UPLOAD */
-    .upload-zone{cursor:pointer;text-align:center;border:2px dashed rgba(255,255,255,.1);border-radius:16px;padding:2.5rem 2rem;transition:all .3s;background:rgba(255,255,255,.015)}
-    .upload-zone.drag-over,.upload-zone:hover{border-color:var(--blue);box-shadow:0 0 30px rgba(0,212,255,.08)}
-    .upload-zone.has-file{border-color:var(--green);box-shadow:0 0 20px rgba(34,197,94,.08)}
-    .upload-icon{font-size:2.8rem;margin-bottom:.6rem;display:block;opacity:.4}
-    .upload-zone p{color:var(--text-dim);font-size:.9rem}
-    .upload-zone .file-types{font-size:.78rem;margin-top:.4rem;color:var(--text-dim);opacity:.5}
-    .upload-zone input[type=file]{display:none}
-    .file-preview{display:none;align-items:center;gap:.75rem;justify-content:center;background:rgba(0,212,255,.05);border-radius:10px;padding:.6rem 1.2rem;margin-top:1rem;font-size:.88rem;color:var(--blue)}
-    .file-preview.show{display:inline-flex}
-    .file-preview .remove-file{cursor:pointer;opacity:.6;transition:opacity .2s;font-size:1.1rem}
-    .file-preview .remove-file:hover{opacity:1}
-    .input-group{position:relative;margin-top:1rem}
-    .input-group label{display:block;font-size:.82rem;font-weight:600;color:var(--text-dim);margin-bottom:.4rem;letter-spacing:.03em}
-    .input-group input,.input-group select{width:100%;padding:.75rem 1rem;background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:10px;color:var(--text);font-size:.9rem;font-family:inherit;transition:border-color .3s;outline:none}
-    .input-group input:focus,.input-group select:focus{border-color:var(--blue)}
-    .input-group select option{background:#1a1a2e;color:var(--text)}
-    .lang-row{display:flex;gap:1rem;margin-top:1rem}.lang-row .input-group{flex:1}
-    .analyze-btn{width:100%;padding:1rem;margin-top:1.5rem;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;box-shadow:0 4px 20px rgba(139,92,246,.2)}
-    .analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,255,.3)}
-    .analyze-btn:disabled{opacity:.4;cursor:not-allowed}
+    .upload-zone {
+      cursor: pointer;
+      text-align: center;
+      border: 2px dashed rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      transition: all .3s;
+      background: rgba(255, 255, 255, .015)
+    }
+
+    .upload-zone.drag-over,
+    .upload-zone:hover {
+      border-color: var(--blue);
+      box-shadow: 0 0 30px rgba(0, 212, 255, .08)
+    }
+
+    .upload-zone.has-file {
+      border-color: var(--green);
+      box-shadow: 0 0 20px rgba(34, 197, 94, .08)
+    }
+
+    .upload-icon {
+      font-size: 2.8rem;
+      margin-bottom: .6rem;
+      display: block;
+      opacity: .4
+    }
+
+    .upload-zone p {
+      color: var(--text-dim);
+      font-size: .9rem
+    }
+
+    .upload-zone .file-types {
+      font-size: .78rem;
+      margin-top: .4rem;
+      color: var(--text-dim);
+      opacity: .5
+    }
+
+    .upload-zone input[type=file] {
+      display: none
+    }
+
+    .file-preview {
+      display: none;
+      align-items: center;
+      gap: .75rem;
+      justify-content: center;
+      background: rgba(0, 212, 255, .05);
+      border-radius: 10px;
+      padding: .6rem 1.2rem;
+      margin-top: 1rem;
+      font-size: .88rem;
+      color: var(--blue)
+    }
+
+    .file-preview.show {
+      display: inline-flex
+    }
+
+    .file-preview .remove-file {
+      cursor: pointer;
+      opacity: .6;
+      transition: opacity .2s;
+      font-size: 1.1rem
+    }
+
+    .file-preview .remove-file:hover {
+      opacity: 1
+    }
+
+    .input-group {
+      position: relative;
+      margin-top: 1rem
+    }
+
+    .input-group label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: .4rem;
+      letter-spacing: .03em
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: .75rem 1rem;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: .9rem;
+      font-family: inherit;
+      transition: border-color .3s;
+      outline: none
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: var(--blue)
+    }
+
+    .input-group select option {
+      background: #1a1a2e;
+      color: var(--text)
+    }
+
+    .lang-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem
+    }
+
+    .lang-row .input-group {
+      flex: 1
+    }
+
+    .analyze-btn {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .3s;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, .2)
+    }
+
+    .analyze-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 212, 255, .3)
+    }
+
+    .analyze-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed
+    }
+
     /* LOADING */
-    .loading-overlay{display:none;text-align:center;padding:3rem 0}.loading-overlay.show{display:block}
-    .spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.08);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
-    .loading-text{color:var(--text-dim);font-size:.95rem;animation:pulse 1.5s ease-in-out infinite}
+    .loading-overlay {
+      display: none;
+      text-align: center;
+      padding: 3rem 0
+    }
+
+    .loading-overlay.show {
+      display: block
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255, 255, 255, .08);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 1rem
+    }
+
+    .loading-text {
+      color: var(--text-dim);
+      font-size: .95rem;
+      animation: pulse 1.5s ease-in-out infinite
+    }
+
     /* RESULTS */
-    .results{display:none;margin-top:2rem}.results.show{display:block}
-    .result-card{margin-bottom:1.5rem;animation:fadeIn .5s ease}
-    .card-header{font-weight:700;font-size:1.05rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-    .card-header .icon{font-size:1.2rem}
-    .summary-text{color:var(--text-dim);line-height:1.8;white-space:pre-wrap;font-size:.9rem}
-    .entity-group{margin-bottom:1rem}
-    .entity-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--text-dim);margin-bottom:.5rem}
-    .entity-tags{display:flex;flex-wrap:wrap;gap:.4rem}
-    .entity-tag{padding:.3rem .7rem;border-radius:20px;font-size:.8rem;font-weight:500;animation:fadeIn .4s ease both}
-    .tag-name{background:rgba(139,92,246,.12);color:#a78bfa}.tag-date{background:rgba(0,212,255,.08);color:var(--blue)}.tag-org{background:rgba(34,197,94,.08);color:var(--green)}.tag-amount{background:rgba(245,158,11,.08);color:var(--gold)}
-    .sentiment-badge{padding:.5rem 1.2rem;border-radius:20px;font-weight:600;font-size:.9rem}
-    .sentiment-positive{background:rgba(34,197,94,.12);color:var(--green)}.sentiment-negative{background:rgba(239,68,68,.12);color:var(--red)}.sentiment-neutral{background:rgba(113,113,122,.12);color:var(--text-dim)}
-    .sop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.7rem}
-    .sop-item{display:flex;align-items:center;gap:.5rem;padding:.55rem .9rem;border-radius:10px;font-size:.86rem;font-weight:500}
-    .sop-pass{background:rgba(34,197,94,.06);color:var(--green)}.sop-fail{background:rgba(239,68,68,.06);color:var(--red)}
-    .compliance-bar{width:100%;height:10px;background:rgba(255,255,255,.06);border-radius:5px;margin-top:.5rem;overflow:hidden}
-    .compliance-fill{height:100%;border-radius:5px;transition:width 1s ease}
-    .keyword-chips{display:flex;flex-wrap:wrap;gap:.4rem}
-    .keyword-chip{padding:.3rem .7rem;border-radius:16px;font-size:.8rem;font-weight:500;background:rgba(139,92,246,.1);color:#c4b5fd}
-    .transcript-box{max-height:250px;overflow-y:auto;padding:1rem;background:rgba(0,0,0,.25);border-radius:10px;font-size:.85rem;color:var(--text-dim);line-height:1.7;white-space:pre-wrap;word-wrap:break-word}
-    .transcript-box::-webkit-scrollbar{width:5px}.transcript-box::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
-    .stats-bar{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;padding:1rem;background:var(--card);border:1px solid var(--card-border);border-radius:12px}
-    .stat-item{font-size:.82rem;color:var(--text-dim)}.stat-value{color:var(--blue);font-weight:600}
-    .toast-container{position:fixed;top:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem}
-    .toast{padding:.8rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:500;animation:fadeIn .3s ease;backdrop-filter:blur(12px)}
-    .toast.error{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
-    .toast.success{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.2)}
+    .results {
+      display: none;
+      margin-top: 2rem
+    }
+
+    .results.show {
+      display: block
+    }
+
+    .result-card {
+      margin-bottom: 1.5rem;
+      animation: fadeIn .5s ease
+    }
+
+    .card-header {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .card-header .icon {
+      font-size: 1.2rem
+    }
+
+    .summary-text {
+      color: var(--text-dim);
+      line-height: 1.8;
+      white-space: pre-wrap;
+      font-size: .9rem
+    }
+
+    .entity-group {
+      margin-bottom: 1rem
+    }
+
+    .entity-label {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: .5rem
+    }
+
+    .entity-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem
+    }
+
+    .entity-tag {
+      padding: .3rem .7rem;
+      border-radius: 20px;
+      font-size: .8rem;
+      font-weight: 500;
+      animation: fadeIn .4s ease both
+    }
+
+    .tag-name {
+      background: rgba(139, 92, 246, .12);
+      color: #a78bfa
+    }
+
+    .tag-date {
+      background: rgba(0, 212, 255, .08);
+      color: var(--blue)
+    }
+
+    .tag-org {
+      background: rgba(34, 197, 94, .08);
+      color: var(--green)
+    }
+
+    .tag-amount {
+      background: rgba(245, 158, 11, .08);
+      color: var(--gold)
+    }
+
+    .sentiment-badge {
+      padding: .5rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: .9rem
+    }
+
+    .sentiment-positive {
+      background: rgba(34, 197, 94, .12);
+      color: var(--green)
+    }
+
+    .sentiment-negative {
+      background: rgba(239, 68, 68, .12);
+      color: var(--red)
+    }
+
+    .sentiment-neutral {
+      background: rgba(113, 113, 122, .12);
+      color: var(--text-dim)
+    }
+
+    .sop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: .7rem
+    }
+
+    .sop-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem .9rem;
+      border-radius: 10px;
+      font-size: .86rem;
+      font-weight: 500
+    }
+
+    .sop-pass {
+      background: rgba(34, 197, 94, .06);
+      color: var(--green)
+    }
+
+    .sop-fail {
+      background: rgba(239, 68, 68, .06);
+      color: var(--red)
+    }
+
+    .compliance-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, .06);
+      border-radius: 5px;
+      margin-top: .5rem;
+      overflow: hidden
+    }
+
+    .compliance-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 1s ease
+    }
+
+    .keyword-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem
+    }
+
+    .keyword-chip {
+      padding: .3rem .7rem;
+      border-radius: 16px;
+      font-size: .8rem;
+      font-weight: 500;
+      background: rgba(139, 92, 246, .1);
+      color: #c4b5fd
+    }
+
+    .transcript-box {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: rgba(0, 0, 0, .25);
+      border-radius: 10px;
+      font-size: .85rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-wrap: break-word
+    }
+
+    .transcript-box::-webkit-scrollbar {
+      width: 5px
+    }
+
+    .transcript-box::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .08);
+      border-radius: 3px
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px
+    }
+
+    .stat-item {
+      font-size: .82rem;
+      color: var(--text-dim)
+    }
+
+    .stat-value {
+      color: var(--blue);
+      font-weight: 600
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .toast {
+      padding: .8rem 1.2rem;
+      border-radius: 10px;
+      font-size: .85rem;
+      font-weight: 500;
+      animation: fadeIn .3s ease;
+      backdrop-filter: blur(12px)
+    }
+
+    .toast.error {
+      background: rgba(239, 68, 68, .15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, .2)
+    }
+
+    .toast.success {
+      background: rgba(34, 197, 94, .15);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, .2)
+    }
+
     /* DOCS */
-    .docs-section{margin-top:1.5rem}
-    .docs-block{margin-bottom:1.5rem}
-    .docs-block h3{font-size:1.1rem;margin-bottom:.8rem;color:#fff;display:flex;align-items:center;gap:.5rem}
-    .docs-block p{color:var(--text-dim);line-height:1.8;font-size:.9rem;margin-bottom:.8rem}
+    .docs-section {
+      margin-top: 1.5rem
+    }
+
+    .docs-block {
+      margin-bottom: 1.5rem
+    }
+
+    .docs-block h3 {
+      font-size: 1.1rem;
+      margin-bottom: .8rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .docs-block p {
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: .9rem;
+      margin-bottom: .8rem
+    }
+
     /* FEATURES */
-    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:1.5rem}
-    .feature-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:1.5rem;transition:all .3s}
-    .feature-card:hover{border-color:rgba(139,92,246,.2);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.3)}
-    .feature-card .f-icon{font-size:2rem;margin-bottom:.8rem;display:block}
-    .feature-card h4{font-size:1rem;font-weight:700;margin-bottom:.5rem;color:#fff}
-    .feature-card p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
-    .footer{text-align:center;padding:2rem 0;font-size:.75rem;color:var(--text-dim);opacity:.4}
-    @media(max-width:640px){.container{padding:1rem}.hero h1{font-size:1.8rem}.nav-tabs{flex-wrap:wrap}.nav-tab{font-size:.72rem;padding:.5rem}.nav-bar{flex-direction:column}.lang-row{flex-direction:column}.sop-grid{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}}
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all .3s
+    }
+
+    .feature-card:hover {
+      border-color: rgba(139, 92, 246, .2);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .3)
+    }
+
+    .feature-card .f-icon {
+      font-size: 2rem;
+      margin-bottom: .8rem;
+      display: block
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+      color: #fff
+    }
+
+    .feature-card p {
+      font-size: .82rem;
+      color: var(--text-dim);
+      line-height: 1.6
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      font-size: .75rem;
+      color: var(--text-dim);
+      opacity: .4
+    }
+
+    @media(max-width:640px) {
+      .container {
+        padding: 1rem
+      }
+
+      .hero h1 {
+        font-size: 1.8rem
+      }
+
+      .nav-tabs {
+        flex-wrap: wrap
+      }
+
+      .nav-tab {
+        font-size: .72rem;
+        padding: .5rem
+      }
+
+      .nav-bar {
+        flex-direction: column
+      }
+
+      .lang-row {
+        flex-direction: column
+      }
+
+      .sop-grid {
+        grid-template-columns: 1fr
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr
+      }
+    }
   </style>
 </head>
+
 <body>
-<div class="particles" id="particles"></div>
-<div class="toast-container" id="toastContainer"></div>
+  <div class="particles" id="particles"></div>
+  <div class="toast-container" id="toastContainer"></div>
 
-<!-- LOGIN -->
-<div class="auth-wrapper" id="loginPage">
-  <div class="auth-card">
-    <div class="auth-logo"><span class="logo-icon"></span><h1>DocuMind AI</h1><p>Sign in to continue</p></div>
-    <div class="auth-error" id="loginError"></div>
-    <button class="google-btn" id="googleLoginBtn"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Sign in with Google</button>
-    <div class="auth-divider">or sign in with email</div>
-    <label class="auth-label">Email Address</label>
-    <input type="email" class="auth-input" id="loginEmail" placeholder="you@example.com">
-    <label class="auth-label">Password</label>
-    <input type="password" class="auth-input" id="loginPassword" placeholder="Enter your password">
-    <button class="auth-btn" id="loginBtn">Sign In</button>
-    <div class="auth-switch">Don't have an account? <a id="showSignup">Sign Up</a></div>
-  </div>
-</div>
-
-<!-- SIGNUP -->
-<div class="auth-wrapper" id="signupPage" style="display:none">
-  <div class="auth-card">
-    <div class="auth-logo"><span class="logo-icon"></span><h1>DocuMind AI</h1><p>Create your account</p></div>
-    <div class="auth-error" id="signupError"></div>
-    <button class="google-btn" id="googleSignupBtn"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Sign up with Google</button>
-    <div class="auth-divider">or create with email</div>
-    <label class="auth-label">Full Name</label>
-    <input type="text" class="auth-input" id="signupName" placeholder="John Doe">
-    <label class="auth-label">Email Address</label>
-    <input type="email" class="auth-input" id="signupEmail" placeholder="you@example.com">
-    <label class="auth-label">Password</label>
-    <input type="password" class="auth-input" id="signupPassword" placeholder="Minimum 6 characters">
-    <label class="auth-label">Confirm Password</label>
-    <input type="password" class="auth-input" id="signupConfirm" placeholder="Re-enter password">
-    <button class="auth-btn" id="signupBtn">Create Account</button>
-    <div class="auth-switch">Already have an account? <a id="showLogin">Sign In</a></div>
-  </div>
-</div>
-
-<!-- DASHBOARD -->
-<div class="container" id="dashboard" style="display:none">
-  <section class="hero">
-    <div class="hero-badge"> AI-Powered Analysis Engine</div>
-    <h1>Call Center Compliance AI</h1>
-    <p class="tagline">Upload documents for intelligent summarization, NER & sentiment analysis  or analyze call center audio recordings for SOP compliance scoring, transcript generation & analytics.</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="num">20+</div><div class="lbl">File Formats</div></div>
-      <div class="hero-stat"><div class="num">99%</div><div class="lbl">Accuracy</div></div>
-      <div class="hero-stat"><div class="num">&lt;5s</div><div class="lbl">Processing</div></div>
-      <div class="hero-stat"><div class="num">5</div><div class="lbl">SOP Stages</div></div>
-    </div>
-  </section>
-  <div class="nav-bar">
-    <nav class="nav-tabs" id="navTabs">
-      <button class="nav-tab active" data-page="docAnalyze"> Documents</button>
-      <button class="nav-tab" data-page="callAnalyze"> Call Compliance</button>
-      <button class="nav-tab" data-page="docsPage"> Documentation</button>
-      <button class="nav-tab" data-page="aboutPage"> About</button>
-    </nav>
-    <div class="nav-right"><div class="user-badge" id="userBadge"> Guest</div><button class="logout-btn" id="logoutBtn">Logout</button></div>
-  </div>
-
-  <!-- DOC ANALYSIS -->
-  <div class="page active" id="docAnalyze">
-    <section class="glass">
-      <div class="upload-zone" id="docUploadZone"><span class="upload-icon">&#8682;</span><p>Drag & drop your document here, or <strong style="color:var(--blue)">browse</strong></p><p class="file-types">Supports PDF, DOCX, PNG, JPG, JPEG</p><input type="file" id="docFileInput" accept=".pdf,.docx,.png,.jpg,.jpeg,.tiff,.bmp,.webp"></div>
-      <div class="file-preview" id="docFilePreview"><span></span><span id="docFileName"></span><span class="remove-file" id="docRemoveFile">&times;</span></div>
-      <div class="input-group"><label>API Key</label><input type="text" id="docApiKey" placeholder="x-api-key" value="hcl_hack_api_key_2024_secure"></div>
-      <button class="analyze-btn" id="docAnalyzeBtn" disabled>Analyze Document</button>
-    </section>
-    <div class="loading-overlay" id="docLoading"><div class="spinner"></div><p class="loading-text">Analyzing with Gemini AI...</p></div>
-    <div class="results" id="docResults">
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Detailed Summary</div><div class="summary-text" id="docSummary"></div></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Named Entities</div><div id="docEntities"></div></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Sentiment Analysis</div><div id="docSentiment"></div></div>
-      <div class="stats-bar" id="docStats"></div>
+  <!-- LOGIN -->
+  <div class="auth-wrapper" id="loginPage">
+    <div class="auth-card">
+      <div class="auth-logo"><span class="logo-icon"></span>
+        <h1>DocuMind AI</h1>
+        <p>Sign in to continue</p>
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="google-btn" id="googleLoginBtn"><svg viewBox="0 0 24 24">
+          <path fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+          <path fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>Sign in with Google</button>
+      <div class="auth-divider">or sign in with email</div>
+      <label class="auth-label">Email Address</label>
+      <input type="email" class="auth-input" id="loginEmail" placeholder="you@example.com">
+      <label class="auth-label">Password</label>
+      <input type="password" class="auth-input" id="loginPassword" placeholder="Enter your password">
+      <button class="auth-btn" id="loginBtn">Sign In</button>
+      <div class="auth-switch">Don't have an account? <a id="showSignup">Sign Up</a></div>
     </div>
   </div>
 
-  <!-- CALL ANALYSIS -->
-  <div class="page" id="callAnalyze">
-    <section class="glass">
-      <div class="upload-zone" id="callUploadZone"><span class="upload-icon"></span><p>Drag & drop your audio file here, or <strong style="color:var(--blue)">browse</strong></p><p class="file-types">Supports MP3, WAV, M4A, FLAC, OGG</p><input type="file" id="callFileInput" accept=".mp3,.wav,.m4a,.flac,.ogg"></div>
-      <div class="file-preview" id="callFilePreview"><span></span><span id="callFileName"></span><span class="remove-file" id="callRemoveFile">&times;</span></div>
-      <div class="lang-row"><div class="input-group"><label>Language</label><select id="callLanguage"><option value="Tamil">Tamil (Tanglish)</option><option value="Hindi">Hindi (Hinglish)</option><option value="English">English</option></select></div><div class="input-group"><label>API Key</label><input type="text" id="callApiKey" value="hcl_hack_api_key_2024_secure"></div></div>
-      <button class="analyze-btn" id="callAnalyzeBtn" disabled>Analyze Call</button>
-    </section>
-    <div class="loading-overlay" id="callLoading"><div class="spinner"></div><p class="loading-text">Transcribing & analyzing audio...</p></div>
-    <div class="results" id="callResults">
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Transcript</div><div class="transcript-box" id="callTranscript"></div></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Summary</div><div class="summary-text" id="callSummary"></div></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Compliance Score: <span id="callScoreLabel" style="color:var(--blue)"></span></div><div class="compliance-bar"><div class="compliance-fill" id="callScoreBar" style="width:0;background:var(--green)"></div></div><p style="margin-top:.5rem;font-size:.82rem;color:var(--text-dim)" id="callAdherence"></p></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> SOP Validation</div><div class="sop-grid" id="callSOP"></div><p style="margin-top:.8rem;font-size:.85rem;color:var(--text-dim)" id="callSOPExplanation"></p></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Analytics</div><div id="callAnalytics"></div></div>
-      <div class="result-card glass"><div class="card-header"><span class="icon"></span> Keywords</div><div class="keyword-chips" id="callKeywords"></div></div>
-      <div class="stats-bar" id="callStats"></div>
+  <!-- SIGNUP -->
+  <div class="auth-wrapper" id="signupPage" style="display:none">
+    <div class="auth-card">
+      <div class="auth-logo"><span class="logo-icon"></span>
+        <h1>DocuMind AI</h1>
+        <p>Create your account</p>
+      </div>
+      <div class="auth-error" id="signupError"></div>
+      <button class="google-btn" id="googleSignupBtn"><svg viewBox="0 0 24 24">
+          <path fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+          <path fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05"
+            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>Sign up with Google</button>
+      <div class="auth-divider">or create with email</div>
+      <label class="auth-label">Full Name</label>
+      <input type="text" class="auth-input" id="signupName" placeholder="John Doe">
+      <label class="auth-label">Email Address</label>
+      <input type="email" class="auth-input" id="signupEmail" placeholder="you@example.com">
+      <label class="auth-label">Password</label>
+      <input type="password" class="auth-input" id="signupPassword" placeholder="Minimum 6 characters">
+      <label class="auth-label">Confirm Password</label>
+      <input type="password" class="auth-input" id="signupConfirm" placeholder="Re-enter password">
+      <button class="auth-btn" id="signupBtn">Create Account</button>
+      <div class="auth-switch">Already have an account? <a id="showLogin">Sign In</a></div>
     </div>
   </div>
 
-  <!-- DOCUMENTATION -->
-  <div class="page" id="docsPage">
-    <section class="glass docs-section">
-      <div class="card-header" style="font-size:1.4rem;margin-bottom:1.5rem"><span class="icon"></span> Complete Documentation</div>
-      <div class="docs-block">
-        <h3> What is DocuMind AI?</h3>
-        <p>DocuMind AI is a comprehensive, production-grade AI-powered analysis platform designed for modern enterprises that need intelligent document processing and call center quality assurance. The system leverages Google's Gemini 2.0 Flash multimodal AI engine to provide state-of-the-art natural language processing capabilities including document summarization, named entity recognition (NER), sentiment analysis, and audio transcription with compliance scoring.</p>
-        <p>The platform is built specifically for call center environments where regulatory compliance, quality assurance, and customer interaction analysis are critical business requirements. It processes both text-based documents (PDFs, DOCX files, images) and audio recordings (MP3, WAV, M4A, FLAC, OGG) through a unified API interface, delivering structured JSON outputs suitable for integration with existing enterprise systems, dashboards, and reporting tools.</p>
-      </div>
-      <div class="docs-block">
-        <h3> Document Analysis Pipeline</h3>
-        <p>The document analysis module accepts files in multiple formats and processes them through a multi-stage AI pipeline. When a PDF is uploaded, the system uses pdfplumber for layout-aware text extraction that preserves document structure, tables, and formatting. DOCX files are processed using python-docx to extract paragraphs, headings, and embedded content. Image files (PNG, JPG, JPEG) are sent directly to Google Gemini's multimodal Vision API for OCR and content understanding.</p>
-        <p>Once text is extracted, it undergoes cleaning and normalization through the text processing module, which removes noise, normalizes whitespace, and prepares the content for AI analysis. The cleaned text is then sent to Gemini 2.0 Flash with a carefully engineered prompt that instructs the AI to produce a comprehensive 20-30 line summary covering all key points, named entities organized by category (people, organizations, dates, monetary amounts), and overall sentiment classification.</p>
-        <p>For resumes, the system extracts candidate name, contact information, educational background, technical skills, work experience, projects, certifications, and achievements. For reports, it covers executive summaries, methodology, findings, conclusions, and recommendations. For contracts and legal documents, it identifies parties, terms, obligations, and key clauses.</p>
-      </div>
-      <div class="docs-block">
-        <h3> Call Center Compliance Analysis</h3>
-        <p>The Call Center Compliance module is designed to analyze customer service call recordings against Standard Operating Procedure (SOP) requirements. Audio files are uploaded through the frontend, base64-encoded, and sent to the Gemini 2.0 Flash multimodal API which performs speech-to-text transcription and natural language understanding in a single inference pass.</p>
-        <p>The system evaluates each call against five critical SOP stages: Greeting (did the agent properly greet the customer?), Identification (was customer identity verified?), Problem Statement (was the call purpose clearly explained?), Solution Offering (were solutions or options discussed?), and Closing (was there a proper closing statement?). Each stage is marked as FOLLOWED or NOT_FOLLOWED, and an overall compliance score from 0.0 to 1.0 is calculated.</p>
-        <p>Beyond SOP validation, the system extracts payment preference intelligence (EMI, Full Payment, Partial Payment, Down Payment), identifies rejection reasons when applicable (High Interest, Budget Constraints, Already Paid, Not Interested), performs sentiment analysis on the overall conversation, and extracts relevant keywords for searchability and reporting.</p>
-        <p>The system supports multilingual analysis including Tamil (Tanglish), Hindi (Hinglish), and English, making it suitable for diverse Indian call center environments.</p>
-      </div>
-      <div class="docs-block">
-        <h3> Technical Architecture</h3>
-        <p>The backend is built with FastAPI, a modern high-performance Python web framework that supports asynchronous request handling. The API is secured with API key authentication via the x-api-key header. All requests are validated using Pydantic models for type safety and automatic documentation generation. The system runs on Uvicorn ASGI server for production-grade performance.</p>
-        <p>The AI engine uses Google Gemini 2.0 Flash, which provides multimodal capabilities  meaning it can process text, images, and audio in a single model call. This eliminates the need for separate OCR, STT, and NLP services, reducing latency and complexity. The system includes intelligent fallback mechanisms that provide meaningful responses even when the AI API is temporarily unavailable or rate-limited.</p>
-        <p>Authentication is handled through Firebase Authentication with Google Sign-In support, providing secure and convenient user management. The frontend is a single-page application built with vanilla HTML, CSS, and JavaScript, featuring a modern dark-themed glassmorphism design with smooth animations and responsive layout.</p>
-      </div>
-      <div class="docs-block">
-        <h3> API Endpoints</h3>
-        <p><strong style="color:var(--blue)">POST /api/document-analyze</strong>  Accepts a JSON body with fileName (string), fileType ("pdf", "docx", or "image"), and fileBase64 (base64-encoded file content). Returns a JSON object with summary, entities (names, dates, organizations, amounts), and sentiment. Requires x-api-key header for authentication.</p>
-        <p><strong style="color:var(--blue)">POST /api/call-analytics</strong>  Accepts a JSON body with language ("Tamil", "Hindi", or "English"), audioFormat ("mp3", "wav", "m4a", "flac", "ogg"), and audioBase64 (base64-encoded audio content). Returns transcript, summary, sop_validation object, analytics object, and keywords array. Requires x-api-key header.</p>
-        <p><strong style="color:var(--blue)">GET /health</strong>  Simple health check endpoint that returns {"status": "healthy"} when the server is running.</p>
+  <!-- DASHBOARD -->
+  <div class="container" id="dashboard" style="display:none">
+    <section class="hero">
+      <div class="hero-badge"> AI-Powered Analysis Engine</div>
+      <h1>Call Center Compliance AI</h1>
+      <p class="tagline">Upload documents for intelligent summarization, NER & sentiment analysis or analyze call center
+        audio recordings for SOP compliance scoring, transcript generation & analytics.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">20+</div>
+          <div class="lbl">File Formats</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">99%</div>
+          <div class="lbl">Accuracy</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">&lt;5s</div>
+          <div class="lbl">Processing</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">5</div>
+          <div class="lbl">SOP Stages</div>
+        </div>
       </div>
     </section>
-  </div>
-
-  <!-- ABOUT -->
-  <div class="page" id="aboutPage">
-    <section class="glass" style="margin-bottom:1.5rem">
-      <div class="card-header"><span class="icon"></span> Why DocuMind AI?</div>
-      <p style="color:var(--text-dim);line-height:1.8;margin-bottom:1rem">In today's fast-paced business environment, organizations handle thousands of documents and customer calls daily. Manual review is time-consuming, error-prone, and expensive. DocuMind AI automates the entire analysis workflow  from document ingestion to actionable insights  using cutting-edge multimodal AI technology.</p>
-      <p style="color:var(--text-dim);line-height:1.8">Whether you're a compliance officer reviewing call recordings, an HR professional analyzing resumes, or a legal team processing contracts, DocuMind AI delivers instant, accurate, and structured analysis that would take humans hours to complete. The system's SOP compliance scoring ensures your call center agents meet quality standards consistently.</p>
-    </section>
-    <div class="features-grid">
-      <div class="feature-card"><span class="f-icon"></span><h4>Smart Document Analysis</h4><p>Upload PDFs, DOCX, or images and get 20-30 line detailed summaries, named entities, and sentiment analysis powered by Gemini AI.</p></div>
-      <div class="feature-card"><span class="f-icon"></span><h4>Audio Transcription</h4><p>Full speech-to-text transcription of call recordings in Tamil, Hindi, and English with high accuracy multimodal processing.</p></div>
-      <div class="feature-card"><span class="f-icon"></span><h4>SOP Compliance Scoring</h4><p>Automated validation of 5 critical call stages  Greeting, Identification, Problem, Solution, Closing  with scoring from 0.0 to 1.0.</p></div>
-      <div class="feature-card"><span class="f-icon"></span><h4>Analytics & Insights</h4><p>Payment preference detection, rejection reason classification, sentiment analysis, and keyword extraction for business intelligence.</p></div>
-      <div class="feature-card"><span class="f-icon"></span><h4>Firebase Authentication</h4><p>Secure user management with Google Sign-In integration, session persistence, and role-based access control via Firebase Auth.</p></div>
-      <div class="feature-card"><span class="f-icon"></span><h4>Lightning Fast</h4><p>Sub-5-second processing using Google Gemini 2.0 Flash with intelligent caching and optimized API pipelines for enterprise workloads.</p></div>
+    <div class="nav-bar">
+      <nav class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-page="docAnalyze"> Documents</button>
+        <button class="nav-tab" data-page="callAnalyze"> Call Compliance</button>
+        <button class="nav-tab" data-page="docsPage"> Documentation</button>
+        <button class="nav-tab" data-page="aboutPage"> About</button>
+      </nav>
+      <div class="nav-right">
+        <div class="user-badge" id="userBadge"> Guest</div><button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
     </div>
-    <section class="glass" style="margin-top:1.5rem">
-      <div class="card-header"><span class="icon"></span> Tech Stack</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:.5rem">
-        <div><strong style="color:var(--blue)">Backend:</strong><br><span style="color:var(--text-dim)">Python 3.11, FastAPI, Uvicorn</span></div>
-        <div><strong style="color:var(--purple)">AI Engine:</strong><br><span style="color:var(--text-dim)">Google Gemini 2.0 Flash</span></div>
-        <div><strong style="color:var(--green)">Auth:</strong><br><span style="color:var(--text-dim)">Firebase Authentication + Google</span></div>
-        <div><strong style="color:var(--gold)">Deployment:</strong><br><span style="color:var(--text-dim)">Vercel / Railway / Docker</span></div>
+
+    <!-- DOC ANALYSIS -->
+    <div class="page active" id="docAnalyze">
+      <section class="glass">
+        <div class="upload-zone" id="docUploadZone"><span class="upload-icon">&#8682;</span>
+          <p>Drag & drop your document here, or <strong style="color:var(--blue)">browse</strong></p>
+          <p class="file-types">Supports PDF, DOCX, PNG, JPG, JPEG</p><input type="file" id="docFileInput"
+            accept=".pdf,.docx,.png,.jpg,.jpeg,.tiff,.bmp,.webp">
+        </div>
+        <div class="file-preview" id="docFilePreview"><span></span><span id="docFileName"></span><span
+            class="remove-file" id="docRemoveFile">&times;</span></div>
+        <div class="input-group"><label>API Key</label><input type="text" id="docApiKey" placeholder="x-api-key"
+            value="hcl_hack_api_key_2024_secure"></div>
+        <button class="analyze-btn" id="docAnalyzeBtn" disabled>Analyze Document</button>
+      </section>
+      <div class="loading-overlay" id="docLoading">
+        <div class="spinner"></div>
+        <p class="loading-text">Analyzing with Gemini AI...</p>
       </div>
-    </section>
+      <div class="results" id="docResults">
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Detailed Summary</div>
+          <div class="summary-text" id="docSummary"></div>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Named Entities</div>
+          <div id="docEntities"></div>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Sentiment Analysis</div>
+          <div id="docSentiment"></div>
+        </div>
+        <div class="stats-bar" id="docStats"></div>
+      </div>
+    </div>
+
+    <!-- CALL ANALYSIS -->
+    <div class="page" id="callAnalyze">
+      <section class="glass">
+        <div class="upload-zone" id="callUploadZone"><span class="upload-icon"></span>
+          <p>Drag & drop your audio file here, or <strong style="color:var(--blue)">browse</strong></p>
+          <p class="file-types">Supports MP3, WAV, M4A, FLAC, OGG</p><input type="file" id="callFileInput"
+            accept=".mp3,.wav,.m4a,.flac,.ogg">
+        </div>
+        <div class="file-preview" id="callFilePreview"><span></span><span id="callFileName"></span><span
+            class="remove-file" id="callRemoveFile">&times;</span></div>
+        <div class="lang-row">
+          <div class="input-group"><label>Language</label><select id="callLanguage">
+              <option value="Tamil">Tamil (Tanglish)</option>
+              <option value="Hindi">Hindi (Hinglish)</option>
+              <option value="English">English</option>
+            </select></div>
+          <div class="input-group"><label>API Key</label><input type="text" id="callApiKey"
+              value="hcl_hack_api_key_2024_secure"></div>
+        </div>
+        <button class="analyze-btn" id="callAnalyzeBtn" disabled>Analyze Call</button>
+      </section>
+      <div class="loading-overlay" id="callLoading">
+        <div class="spinner"></div>
+        <p class="loading-text">Transcribing & analyzing audio...</p>
+      </div>
+      <div class="results" id="callResults">
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Transcript</div>
+          <div class="transcript-box" id="callTranscript"></div>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Summary</div>
+          <div class="summary-text" id="callSummary"></div>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Compliance Score: <span id="callScoreLabel"
+              style="color:var(--blue)"></span></div>
+          <div class="compliance-bar">
+            <div class="compliance-fill" id="callScoreBar" style="width:0;background:var(--green)"></div>
+          </div>
+          <p style="margin-top:.5rem;font-size:.82rem;color:var(--text-dim)" id="callAdherence"></p>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> SOP Validation</div>
+          <div class="sop-grid" id="callSOP"></div>
+          <p style="margin-top:.8rem;font-size:.85rem;color:var(--text-dim)" id="callSOPExplanation"></p>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Analytics</div>
+          <div id="callAnalytics"></div>
+        </div>
+        <div class="result-card glass">
+          <div class="card-header"><span class="icon"></span> Keywords</div>
+          <div class="keyword-chips" id="callKeywords"></div>
+        </div>
+        <div class="stats-bar" id="callStats"></div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTATION -->
+    <div class="page" id="docsPage">
+      <section class="glass docs-section">
+        <div class="card-header" style="font-size:1.4rem;margin-bottom:1.5rem"><span class="icon"></span> Complete
+          Documentation</div>
+        <div class="docs-block">
+          <h3> What is DocuMind AI?</h3>
+          <p>DocuMind AI is a comprehensive, production-grade AI-powered analysis platform designed for modern
+            enterprises that need intelligent document processing and call center quality assurance. The system
+            leverages Google's Gemini 2.0 Flash multimodal AI engine to provide state-of-the-art natural language
+            processing capabilities including document summarization, named entity recognition (NER), sentiment
+            analysis, and audio transcription with compliance scoring.</p>
+          <p>The platform is built specifically for call center environments where regulatory compliance, quality
+            assurance, and customer interaction analysis are critical business requirements. It processes both
+            text-based documents (PDFs, DOCX files, images) and audio recordings (MP3, WAV, M4A, FLAC, OGG) through a
+            unified API interface, delivering structured JSON outputs suitable for integration with existing enterprise
+            systems, dashboards, and reporting tools.</p>
+        </div>
+        <div class="docs-block">
+          <h3> Document Analysis Pipeline</h3>
+          <p>The document analysis module accepts files in multiple formats and processes them through a multi-stage AI
+            pipeline. When a PDF is uploaded, the system uses pdfplumber for layout-aware text extraction that preserves
+            document structure, tables, and formatting. DOCX files are processed using python-docx to extract
+            paragraphs, headings, and embedded content. Image files (PNG, JPG, JPEG) are sent directly to Google
+            Gemini's multimodal Vision API for OCR and content understanding.</p>
+          <p>Once text is extracted, it undergoes cleaning and normalization through the text processing module, which
+            removes noise, normalizes whitespace, and prepares the content for AI analysis. The cleaned text is then
+            sent to Gemini 2.0 Flash with a carefully engineered prompt that instructs the AI to produce a comprehensive
+            20-30 line summary covering all key points, named entities organized by category (people, organizations,
+            dates, monetary amounts), and overall sentiment classification.</p>
+          <p>For resumes, the system extracts candidate name, contact information, educational background, technical
+            skills, work experience, projects, certifications, and achievements. For reports, it covers executive
+            summaries, methodology, findings, conclusions, and recommendations. For contracts and legal documents, it
+            identifies parties, terms, obligations, and key clauses.</p>
+        </div>
+        <div class="docs-block">
+          <h3> Call Center Compliance Analysis</h3>
+          <p>The Call Center Compliance module is designed to analyze customer service call recordings against Standard
+            Operating Procedure (SOP) requirements. Audio files are uploaded through the frontend, base64-encoded, and
+            sent to the Gemini 2.0 Flash multimodal API which performs speech-to-text transcription and natural language
+            understanding in a single inference pass.</p>
+          <p>The system evaluates each call against five critical SOP stages: Greeting (did the agent properly greet the
+            customer?), Identification (was customer identity verified?), Problem Statement (was the call purpose
+            clearly explained?), Solution Offering (were solutions or options discussed?), and Closing (was there a
+            proper closing statement?). Each stage is marked as FOLLOWED or NOT_FOLLOWED, and an overall compliance
+            score from 0.0 to 1.0 is calculated.</p>
+          <p>Beyond SOP validation, the system extracts payment preference intelligence (EMI, Full Payment, Partial
+            Payment, Down Payment), identifies rejection reasons when applicable (High Interest, Budget Constraints,
+            Already Paid, Not Interested), performs sentiment analysis on the overall conversation, and extracts
+            relevant keywords for searchability and reporting.</p>
+          <p>The system supports multilingual analysis including Tamil (Tanglish), Hindi (Hinglish), and English, making
+            it suitable for diverse Indian call center environments.</p>
+        </div>
+        <div class="docs-block">
+          <h3> Technical Architecture</h3>
+          <p>The backend is built with FastAPI, a modern high-performance Python web framework that supports
+            asynchronous request handling. The API is secured with API key authentication via the x-api-key header. All
+            requests are validated using Pydantic models for type safety and automatic documentation generation. The
+            system runs on Uvicorn ASGI server for production-grade performance.</p>
+          <p>The AI engine uses Google Gemini 2.0 Flash, which provides multimodal capabilities meaning it can process
+            text, images, and audio in a single model call. This eliminates the need for separate OCR, STT, and NLP
+            services, reducing latency and complexity. The system includes intelligent fallback mechanisms that provide
+            meaningful responses even when the AI API is temporarily unavailable or rate-limited.</p>
+          <p>Authentication is handled through Firebase Authentication with Google Sign-In support, providing secure and
+            convenient user management. The frontend is a single-page application built with vanilla HTML, CSS, and
+            JavaScript, featuring a modern dark-themed glassmorphism design with smooth animations and responsive
+            layout.</p>
+        </div>
+        <div class="docs-block">
+          <h3> API Endpoints</h3>
+          <p><strong style="color:var(--blue)">POST /api/document-analyze</strong> Accepts a JSON body with fileName
+            (string), fileType ("pdf", "docx", or "image"), and fileBase64 (base64-encoded file content). Returns a JSON
+            object with summary, entities (names, dates, organizations, amounts), and sentiment. Requires x-api-key
+            header for authentication.</p>
+          <p><strong style="color:var(--blue)">POST /api/call-analytics</strong> Accepts a JSON body with language
+            ("Tamil", "Hindi", or "English"), audioFormat ("mp3", "wav", "m4a", "flac", "ogg"), and audioBase64
+            (base64-encoded audio content). Returns transcript, summary, sop_validation object, analytics object, and
+            keywords array. Requires x-api-key header.</p>
+          <p><strong style="color:var(--blue)">GET /health</strong> Simple health check endpoint that returns {"status":
+            "healthy"} when the server is running.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="page" id="aboutPage">
+      <section class="glass" style="margin-bottom:1.5rem">
+        <div class="card-header"><span class="icon"></span> Why DocuMind AI?</div>
+        <p style="color:var(--text-dim);line-height:1.8;margin-bottom:1rem">In today's fast-paced business environment,
+          organizations handle thousands of documents and customer calls daily. Manual review is time-consuming,
+          error-prone, and expensive. DocuMind AI automates the entire analysis workflow from document ingestion to
+          actionable insights using cutting-edge multimodal AI technology.</p>
+        <p style="color:var(--text-dim);line-height:1.8">Whether you're a compliance officer reviewing call recordings,
+          an HR professional analyzing resumes, or a legal team processing contracts, DocuMind AI delivers instant,
+          accurate, and structured analysis that would take humans hours to complete. The system's SOP compliance
+          scoring ensures your call center agents meet quality standards consistently.</p>
+      </section>
+      <div class="features-grid">
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>Smart Document Analysis</h4>
+          <p>Upload PDFs, DOCX, or images and get 20-30 line detailed summaries, named entities, and sentiment analysis
+            powered by Gemini AI.</p>
+        </div>
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>Audio Transcription</h4>
+          <p>Full speech-to-text transcription of call recordings in Tamil, Hindi, and English with high accuracy
+            multimodal processing.</p>
+        </div>
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>SOP Compliance Scoring</h4>
+          <p>Automated validation of 5 critical call stages Greeting, Identification, Problem, Solution, Closing with
+            scoring from 0.0 to 1.0.</p>
+        </div>
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>Analytics & Insights</h4>
+          <p>Payment preference detection, rejection reason classification, sentiment analysis, and keyword extraction
+            for business intelligence.</p>
+        </div>
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>Firebase Authentication</h4>
+          <p>Secure user management with Google Sign-In integration, session persistence, and role-based access control
+            via Firebase Auth.</p>
+        </div>
+        <div class="feature-card"><span class="f-icon"></span>
+          <h4>Lightning Fast</h4>
+          <p>Sub-5-second processing using Google Gemini 2.0 Flash with intelligent caching and optimized API pipelines
+            for enterprise workloads.</p>
+        </div>
+      </div>
+      <section class="glass" style="margin-top:1.5rem">
+        <div class="card-header"><span class="icon"></span> Tech Stack</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:.5rem">
+          <div><strong style="color:var(--blue)">Backend:</strong><br><span style="color:var(--text-dim)">Python 3.11,
+              FastAPI, Uvicorn</span></div>
+          <div><strong style="color:var(--purple)">AI Engine:</strong><br><span style="color:var(--text-dim)">Google
+              Gemini 2.0 Flash</span></div>
+          <div><strong style="color:var(--green)">Auth:</strong><br><span style="color:var(--text-dim)">Firebase
+              Authentication + Google</span></div>
+          <div><strong style="color:var(--gold)">Deployment:</strong><br><span style="color:var(--text-dim)">Vercel /
+              Railway / Docker</span></div>
+        </div>
+      </section>
+    </div>
+    <footer class="footer">Built with FastAPI & Google Gemini DocuMind AI 2026</footer>
   </div>
-  <footer class="footer">Built with FastAPI & Google Gemini  DocuMind AI  2026</footer>
-</div>
-<script>
-(()=>{
-  // Particles
-  const p=document.getElementById('particles');for(let i=0;i<25;i++){const s=document.createElement('span');const sz=Math.random()*3+1;s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;animation-duration:'+(Math.random()*12+8)+'s;animation-delay:'+(Math.random()*10)+'s';p.appendChild(s)}
+  <script>
+    (() => {
+      // Particles
+      const p = document.getElementById('particles'); for (let i = 0; i < 25; i++) { const s = document.createElement('span'); const sz = Math.random() * 3 + 1; s.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;left:' + Math.random() * 100 + '%;animation-duration:' + (Math.random() * 12 + 8) + 's;animation-delay:' + (Math.random() * 10) + 's'; p.appendChild(s) }
 
-  function toast(msg,type){const c=document.getElementById('toastContainer');const t=document.createElement('div');t.className='toast '+(type||'error');t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),4000)}
-  function fileToBase64(file){return new Promise((r,j)=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.onerror=j;f.readAsDataURL(file)})}
+      function toast(msg, type) { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = 'toast ' + (type || 'error'); t.textContent = msg; c.appendChild(t); setTimeout(() => t.remove(), 4000) }
+      function fileToBase64(file) { return new Promise((r, j) => { const f = new FileReader(); f.onload = () => r(f.result.split(',')[1]); f.onerror = j; f.readAsDataURL(file) }) }
 
-  //  FIREBASE CONFIG 
-  const firebaseConfig={apiKey:"YOUR_FIREBASE_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT_ID",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"YOUR_SENDER_ID",appId:"YOUR_APP_ID"};
-  let firebaseReady=false;
-  try{firebase.initializeApp(firebaseConfig);firebaseReady=firebaseConfig.apiKey!=="YOUR_FIREBASE_API_KEY"}catch(e){console.warn("Firebase not configured:",e)}
+      //  FIREBASE CONFIG 
+      const firebaseConfig = { apiKey: "AIzaSyDg_naZnd9plw6CuXEVLun0tyIlL-y3elI", authDomain: "deepak2525-be9d2.firebaseapp.com", projectId: "deepak2525-be9d2", storageBucket: "deepak2525-be9d2.firebasestorage.app", messagingSenderId: "828973200658", appId: "1:828973200658:web:a6450d014eab56e4dcafcb", measurementId: "G-RVP2HZYQBY" };
+      let firebaseReady = false;
+      try { firebase.initializeApp(firebaseConfig); firebaseReady = firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY" } catch (e) { console.warn("Firebase not configured:", e) }
 
-  //  AUTH 
-  const loginPage=document.getElementById('loginPage'),signupPage=document.getElementById('signupPage'),dashboard=document.getElementById('dashboard');
-  function showDash(user){loginPage.style.display='none';signupPage.style.display='none';dashboard.style.display='block';const badge=document.getElementById('userBadge');if(user.photoURL){badge.innerHTML='<img src="'+user.photoURL+'" alt=""> '+user.displayName}else{badge.textContent=' '+(user.name||user.email||'Guest')}localStorage.setItem('dm_user',JSON.stringify(user))}
-  function showLogin(){loginPage.style.display='flex';signupPage.style.display='none';dashboard.style.display='none'}
-  function showSignup(){loginPage.style.display='none';signupPage.style.display='flex';dashboard.style.display='none'}
+      //  AUTH 
+      const loginPage = document.getElementById('loginPage'), signupPage = document.getElementById('signupPage'), dashboard = document.getElementById('dashboard');
+      function showDash(user) { loginPage.style.display = 'none'; signupPage.style.display = 'none'; dashboard.style.display = 'block'; const badge = document.getElementById('userBadge'); if (user.photoURL) { badge.innerHTML = '<img src="' + user.photoURL + '" alt=""> ' + user.displayName } else { badge.textContent = ' ' + (user.name || user.email || 'Guest') } localStorage.setItem('dm_user', JSON.stringify(user)) }
+      function showLogin() { loginPage.style.display = 'flex'; signupPage.style.display = 'none'; dashboard.style.display = 'none' }
+      function showSignup() { loginPage.style.display = 'none'; signupPage.style.display = 'flex'; dashboard.style.display = 'none' }
 
-  const saved=localStorage.getItem('dm_user');if(saved){try{showDash(JSON.parse(saved))}catch(e){showLogin()}}
+      const saved = localStorage.getItem('dm_user'); if (saved) { try { showDash(JSON.parse(saved)) } catch (e) { showLogin() } }
 
-  // Firebase Google Sign-In
-  function googleSignIn(){
-    if(!firebaseReady){toast('Firebase not configured. Add your Firebase config to use Google Sign-In.','error');return}
-    const provider=new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then(result=>{
-      const u=result.user;showDash({name:u.displayName,email:u.email,photoURL:u.photoURL,uid:u.uid});toast('Welcome, '+u.displayName+'!','success')
-    }).catch(err=>{toast(err.message,'error')})
-  }
-  document.getElementById('googleLoginBtn').addEventListener('click',googleSignIn);
-  document.getElementById('googleSignupBtn').addEventListener('click',googleSignIn);
+      // Firebase Google Sign-In
+      function googleSignIn() {
+        if (!firebaseReady) { toast('Firebase not configured. Add your Firebase config to use Google Sign-In.', 'error'); return }
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(result => {
+          const u = result.user; showDash({ name: u.displayName, email: u.email, photoURL: u.photoURL, uid: u.uid }); toast('Welcome, ' + u.displayName + '!', 'success')
+        }).catch(err => { toast(err.message, 'error') })
+      }
+      document.getElementById('googleLoginBtn').addEventListener('click', googleSignIn);
+      document.getElementById('googleSignupBtn').addEventListener('click', googleSignIn);
 
-  // Email Login
-  document.getElementById('loginBtn').addEventListener('click',()=>{
-    const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPassword').value,errEl=document.getElementById('loginError');errEl.style.display='none';
-    if(!email){errEl.textContent='Enter email.';errEl.style.display='block';return}
-    if(!pass||pass.length<6){errEl.textContent='Password min 6 chars.';errEl.style.display='block';return}
-    if(firebaseReady){firebase.auth().signInWithEmailAndPassword(email,pass).then(r=>{showDash({name:r.user.displayName||email,email:r.user.email,uid:r.user.uid});toast('Welcome back!','success')}).catch(err=>{
-      if(err.code==='auth/user-not-found'){errEl.textContent='No account found. Sign up first.';errEl.style.display='block'}else{errEl.textContent=err.message;errEl.style.display='block'}
-    })}else{const users=JSON.parse(localStorage.getItem('dm_users')||'[]');const found=users.find(u=>u.email===email&&u.password===pass);if(found){showDash(found);toast('Welcome back!','success')}else{errEl.textContent='Invalid credentials or sign up first.';errEl.style.display='block'}}
-  });
+      // Email Login
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value.trim(), pass = document.getElementById('loginPassword').value, errEl = document.getElementById('loginError'); errEl.style.display = 'none';
+        if (!email) { errEl.textContent = 'Enter email.'; errEl.style.display = 'block'; return }
+        if (!pass || pass.length < 6) { errEl.textContent = 'Password min 6 chars.'; errEl.style.display = 'block'; return }
+        if (firebaseReady) {
+          firebase.auth().signInWithEmailAndPassword(email, pass).then(r => { showDash({ name: r.user.displayName || email, email: r.user.email, uid: r.user.uid }); toast('Welcome back!', 'success') }).catch(err => {
+            if (err.code === 'auth/user-not-found') { errEl.textContent = 'No account found. Sign up first.'; errEl.style.display = 'block' } else { errEl.textContent = err.message; errEl.style.display = 'block' }
+          })
+        } else { const users = JSON.parse(localStorage.getItem('dm_users') || '[]'); const found = users.find(u => u.email === email && u.password === pass); if (found) { showDash(found); toast('Welcome back!', 'success') } else { errEl.textContent = 'Invalid credentials or sign up first.'; errEl.style.display = 'block' } }
+      });
 
-  // Email Signup
-  document.getElementById('signupBtn').addEventListener('click',()=>{
-    const name=document.getElementById('signupName').value.trim(),email=document.getElementById('signupEmail').value.trim(),pass=document.getElementById('signupPassword').value,confirm=document.getElementById('signupConfirm').value,errEl=document.getElementById('signupError');errEl.style.display='none';
-    if(!name){errEl.textContent='Enter your name.';errEl.style.display='block';return}
-    if(!email||!email.includes('@')){errEl.textContent='Enter valid email.';errEl.style.display='block';return}
-    if(!pass||pass.length<6){errEl.textContent='Password min 6 chars.';errEl.style.display='block';return}
-    if(pass!==confirm){errEl.textContent='Passwords do not match.';errEl.style.display='block';return}
-    if(firebaseReady){firebase.auth().createUserWithEmailAndPassword(email,pass).then(r=>{r.user.updateProfile({displayName:name});showDash({name,email:r.user.email,uid:r.user.uid});toast('Account created!','success')}).catch(err=>{errEl.textContent=err.message;errEl.style.display='block'})}else{const users=JSON.parse(localStorage.getItem('dm_users')||'[]');if(users.find(u=>u.email===email)){errEl.textContent='Account exists.';errEl.style.display='block';return}const u={name,email,password:pass};users.push(u);localStorage.setItem('dm_users',JSON.stringify(users));showDash(u);toast('Account created!','success')}
-  });
+      // Email Signup
+      document.getElementById('signupBtn').addEventListener('click', () => {
+        const name = document.getElementById('signupName').value.trim(), email = document.getElementById('signupEmail').value.trim(), pass = document.getElementById('signupPassword').value, confirm = document.getElementById('signupConfirm').value, errEl = document.getElementById('signupError'); errEl.style.display = 'none';
+        if (!name) { errEl.textContent = 'Enter your name.'; errEl.style.display = 'block'; return }
+        if (!email || !email.includes('@')) { errEl.textContent = 'Enter valid email.'; errEl.style.display = 'block'; return }
+        if (!pass || pass.length < 6) { errEl.textContent = 'Password min 6 chars.'; errEl.style.display = 'block'; return }
+        if (pass !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return }
+        if (firebaseReady) { firebase.auth().createUserWithEmailAndPassword(email, pass).then(r => { r.user.updateProfile({ displayName: name }); showDash({ name, email: r.user.email, uid: r.user.uid }); toast('Account created!', 'success') }).catch(err => { errEl.textContent = err.message; errEl.style.display = 'block' }) } else { const users = JSON.parse(localStorage.getItem('dm_users') || '[]'); if (users.find(u => u.email === email)) { errEl.textContent = 'Account exists.'; errEl.style.display = 'block'; return } const u = { name, email, password: pass }; users.push(u); localStorage.setItem('dm_users', JSON.stringify(users)); showDash(u); toast('Account created!', 'success') }
+      });
 
-  // Logout
-  document.getElementById('logoutBtn').addEventListener('click',()=>{if(firebaseReady)firebase.auth().signOut();localStorage.removeItem('dm_user');showLogin();toast('Logged out.','success')});
-  document.getElementById('showSignup').addEventListener('click',showSignup);
-  document.getElementById('showLogin').addEventListener('click',showLogin);
-  document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn').click()});
-  document.getElementById('signupConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('signupBtn').click()});
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', () => { if (firebaseReady) firebase.auth().signOut(); localStorage.removeItem('dm_user'); showLogin(); toast('Logged out.', 'success') });
+      document.getElementById('showSignup').addEventListener('click', showSignup);
+      document.getElementById('showLogin').addEventListener('click', showLogin);
+      document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginBtn').click() });
+      document.getElementById('signupConfirm').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('signupBtn').click() });
 
-  // Tabs
-  document.querySelectorAll('.nav-tab').forEach(tab=>{tab.addEventListener('click',()=>{document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById(tab.dataset.page).classList.add('active')})});
+      // Tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.page).classList.add('active') }) });
 
-  //  DOC ANALYSIS 
-  const docZone=document.getElementById('docUploadZone'),docInput=document.getElementById('docFileInput'),docPreview=document.getElementById('docFilePreview'),docName=document.getElementById('docFileName'),docRemove=document.getElementById('docRemoveFile'),docKey=document.getElementById('docApiKey'),docBtn=document.getElementById('docAnalyzeBtn');
-  let docFile=null;
-  function docFT(n){const e=n.split('.').pop().toLowerCase();if(e==='pdf')return'pdf';if(e==='docx')return'docx';if(['png','jpg','jpeg','tiff','bmp','webp'].includes(e))return'image';return null}
-  function docU(){docBtn.disabled=!(docFile&&docKey.value.trim())}
-  function docH(f){const t=docFT(f.name);if(!t){toast('Unsupported file type.');return}if(f.size>20*1024*1024){toast('Max 20MB.');return}docFile=f;docName.textContent=f.name;docPreview.classList.add('show');docZone.classList.add('has-file');docU()}
-  docZone.addEventListener('click',()=>docInput.click());docInput.addEventListener('change',e=>{if(e.target.files[0])docH(e.target.files[0])});
-  docZone.addEventListener('dragover',e=>{e.preventDefault();docZone.classList.add('drag-over')});docZone.addEventListener('dragleave',()=>docZone.classList.remove('drag-over'));docZone.addEventListener('drop',e=>{e.preventDefault();docZone.classList.remove('drag-over');if(e.dataTransfer.files[0])docH(e.dataTransfer.files[0])});
-  docRemove.addEventListener('click',e=>{e.stopPropagation();docFile=null;docInput.value='';docPreview.classList.remove('show');docZone.classList.remove('has-file');docU()});docKey.addEventListener('input',docU);
-  docBtn.addEventListener('click',async()=>{
-    if(!docFile||!docKey.value.trim())return;const key=docKey.value.trim(),ft=docFT(docFile.name);document.getElementById('docResults').classList.remove('show');document.getElementById('docLoading').classList.add('show');docBtn.disabled=true;docBtn.textContent='Analyzing...';const start=performance.now();
-    try{const b64=await fileToBase64(docFile);const res=await fetch('/api/document-analyze',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key},body:JSON.stringify({fileName:docFile.name,fileType:ft,fileBase64:b64})});const data=await res.json();if(!res.ok||data.status==='error')throw new Error(data.message||'Server error');const elapsed=((performance.now()-start)/1000).toFixed(2);
-    document.getElementById('docLoading').classList.remove('show');document.getElementById('docSummary').textContent=data.summary||'No summary.';
-    const entEl=document.getElementById('docEntities');entEl.innerHTML='';[{key:'names',label:'People',cls:'tag-name'},{key:'dates',label:'Dates',cls:'tag-date'},{key:'organizations',label:'Organizations',cls:'tag-org'},{key:'amounts',label:'Amounts',cls:'tag-amount'}].forEach(g=>{const items=(data.entities||{})[g.key]||[];if(!items.length)return;const d=document.createElement('div');d.className='entity-group';d.innerHTML='<div class="entity-label">'+g.label+'</div><div class="entity-tags">'+items.map(i=>'<span class="entity-tag '+g.cls+'">'+i+'</span>').join('')+'</div>';entEl.appendChild(d)});if(!entEl.children.length)entEl.innerHTML='<p style="color:var(--text-dim)">No entities detected.</p>';
-    const sent=(data.sentiment||'Neutral').toLowerCase();document.getElementById('docSentiment').innerHTML='<span class="sentiment-badge sentiment-'+sent+'">'+(sent==='positive'?'':sent==='negative'?'':'')+' '+(data.sentiment||'Neutral')+'</span>';
-    document.getElementById('docStats').innerHTML='<div class="stat-item"> <span class="stat-value">'+docFile.name+'</span></div><div class="stat-item"> <span class="stat-value">'+ft.toUpperCase()+'</span></div><div class="stat-item"> <span class="stat-value">'+elapsed+'s</span></div>';
-    document.getElementById('docResults').classList.add('show');toast('Analysis complete!','success');setTimeout(()=>document.getElementById('docResults').scrollIntoView({behavior:'smooth'}),200)
-    }catch(err){document.getElementById('docLoading').classList.remove('show');toast(err.message||'Error.')}finally{docBtn.disabled=false;docBtn.textContent='Analyze Document';docU()}
-  });
+      //  DOC ANALYSIS 
+      const docZone = document.getElementById('docUploadZone'), docInput = document.getElementById('docFileInput'), docPreview = document.getElementById('docFilePreview'), docName = document.getElementById('docFileName'), docRemove = document.getElementById('docRemoveFile'), docKey = document.getElementById('docApiKey'), docBtn = document.getElementById('docAnalyzeBtn');
+      let docFile = null;
+      function docFT(n) { const e = n.split('.').pop().toLowerCase(); if (e === 'pdf') return 'pdf'; if (e === 'docx') return 'docx'; if (['png', 'jpg', 'jpeg', 'tiff', 'bmp', 'webp'].includes(e)) return 'image'; return null }
+      function docU() { docBtn.disabled = !(docFile && docKey.value.trim()) }
+      function docH(f) { const t = docFT(f.name); if (!t) { toast('Unsupported file type.'); return } if (f.size > 20 * 1024 * 1024) { toast('Max 20MB.'); return } docFile = f; docName.textContent = f.name; docPreview.classList.add('show'); docZone.classList.add('has-file'); docU() }
+      docZone.addEventListener('click', () => docInput.click()); docInput.addEventListener('change', e => { if (e.target.files[0]) docH(e.target.files[0]) });
+      docZone.addEventListener('dragover', e => { e.preventDefault(); docZone.classList.add('drag-over') }); docZone.addEventListener('dragleave', () => docZone.classList.remove('drag-over')); docZone.addEventListener('drop', e => { e.preventDefault(); docZone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) docH(e.dataTransfer.files[0]) });
+      docRemove.addEventListener('click', e => { e.stopPropagation(); docFile = null; docInput.value = ''; docPreview.classList.remove('show'); docZone.classList.remove('has-file'); docU() }); docKey.addEventListener('input', docU);
+      docBtn.addEventListener('click', async () => {
+        if (!docFile || !docKey.value.trim()) return; const key = docKey.value.trim(), ft = docFT(docFile.name); document.getElementById('docResults').classList.remove('show'); document.getElementById('docLoading').classList.add('show'); docBtn.disabled = true; docBtn.textContent = 'Analyzing...'; const start = performance.now();
+        try {
+          const b64 = await fileToBase64(docFile); const res = await fetch('/api/document-analyze', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': key }, body: JSON.stringify({ fileName: docFile.name, fileType: ft, fileBase64: b64 }) }); const data = await res.json(); if (!res.ok || data.status === 'error') throw new Error(data.message || 'Server error'); const elapsed = ((performance.now() - start) / 1000).toFixed(2);
+          document.getElementById('docLoading').classList.remove('show'); document.getElementById('docSummary').textContent = data.summary || 'No summary.';
+          const entEl = document.getElementById('docEntities'); entEl.innerHTML = '';[{ key: 'names', label: 'People', cls: 'tag-name' }, { key: 'dates', label: 'Dates', cls: 'tag-date' }, { key: 'organizations', label: 'Organizations', cls: 'tag-org' }, { key: 'amounts', label: 'Amounts', cls: 'tag-amount' }].forEach(g => { const items = (data.entities || {})[g.key] || []; if (!items.length) return; const d = document.createElement('div'); d.className = 'entity-group'; d.innerHTML = '<div class="entity-label">' + g.label + '</div><div class="entity-tags">' + items.map(i => '<span class="entity-tag ' + g.cls + '">' + i + '</span>').join('') + '</div>'; entEl.appendChild(d) }); if (!entEl.children.length) entEl.innerHTML = '<p style="color:var(--text-dim)">No entities detected.</p>';
+          const sent = (data.sentiment || 'Neutral').toLowerCase(); document.getElementById('docSentiment').innerHTML = '<span class="sentiment-badge sentiment-' + sent + '">' + (sent === 'positive' ? '' : sent === 'negative' ? '' : '') + ' ' + (data.sentiment || 'Neutral') + '</span>';
+          document.getElementById('docStats').innerHTML = '<div class="stat-item"> <span class="stat-value">' + docFile.name + '</span></div><div class="stat-item"> <span class="stat-value">' + ft.toUpperCase() + '</span></div><div class="stat-item"> <span class="stat-value">' + elapsed + 's</span></div>';
+          document.getElementById('docResults').classList.add('show'); toast('Analysis complete!', 'success'); setTimeout(() => document.getElementById('docResults').scrollIntoView({ behavior: 'smooth' }), 200)
+        } catch (err) { document.getElementById('docLoading').classList.remove('show'); toast(err.message || 'Error.') } finally { docBtn.disabled = false; docBtn.textContent = 'Analyze Document'; docU() }
+      });
 
-  //  CALL ANALYSIS 
-  const callZone=document.getElementById('callUploadZone'),callInput=document.getElementById('callFileInput'),callPreview=document.getElementById('callFilePreview'),callName=document.getElementById('callFileName'),callRemove=document.getElementById('callRemoveFile'),callKey=document.getElementById('callApiKey'),callBtn=document.getElementById('callAnalyzeBtn');
-  let callFile=null;
-  function callFmt(n){const e=n.split('.').pop().toLowerCase();if(['mp3','wav','m4a','flac','ogg'].includes(e))return e;return null}
-  function callU(){callBtn.disabled=!(callFile&&callKey.value.trim())}
-  function callH(f){const fmt=callFmt(f.name);if(!fmt){toast('Unsupported audio.');return}if(f.size>20*1024*1024){toast('Max 20MB.');return}callFile=f;callName.textContent=f.name;callPreview.classList.add('show');callZone.classList.add('has-file');callU()}
-  callZone.addEventListener('click',()=>callInput.click());callInput.addEventListener('change',e=>{if(e.target.files[0])callH(e.target.files[0])});
-  callZone.addEventListener('dragover',e=>{e.preventDefault();callZone.classList.add('drag-over')});callZone.addEventListener('dragleave',()=>callZone.classList.remove('drag-over'));callZone.addEventListener('drop',e=>{e.preventDefault();callZone.classList.remove('drag-over');if(e.dataTransfer.files[0])callH(e.dataTransfer.files[0])});
-  callRemove.addEventListener('click',e=>{e.stopPropagation();callFile=null;callInput.value='';callPreview.classList.remove('show');callZone.classList.remove('has-file');callU()});callKey.addEventListener('input',callU);
-  callBtn.addEventListener('click',async()=>{
-    if(!callFile||!callKey.value.trim())return;const key=callKey.value.trim(),fmt=callFmt(callFile.name),lang=document.getElementById('callLanguage').value;document.getElementById('callResults').classList.remove('show');document.getElementById('callLoading').classList.add('show');callBtn.disabled=true;callBtn.textContent='Analyzing...';const start=performance.now();
-    try{const b64=await fileToBase64(callFile);const res=await fetch('/api/call-analytics',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key},body:JSON.stringify({language:lang,audioFormat:fmt,audioBase64:b64})});const data=await res.json();if(!res.ok||data.status==='error')throw new Error(data.message||'Server error');const elapsed=((performance.now()-start)/1000).toFixed(2);
-    document.getElementById('callLoading').classList.remove('show');document.getElementById('callTranscript').textContent=data.transcript||'No transcript.';document.getElementById('callSummary').textContent=data.summary||'No summary.';
-    const sop=data.sop_validation||{};const score=sop.complianceScore||0;document.getElementById('callScoreLabel').textContent=(score*100).toFixed(0)+'%';const bar=document.getElementById('callScoreBar');bar.style.width='0';bar.style.background=score>=0.8?'var(--green)':score>=0.5?'var(--gold)':'var(--red)';setTimeout(()=>{bar.style.width=score*100+'%'},100);document.getElementById('callAdherence').textContent='Status: '+(sop.adherenceStatus||'N/A');
-    const sopEl=document.getElementById('callSOP');sopEl.innerHTML='';['greeting','identification','problemStatement','solutionOffering','closing'].forEach(k=>{const v=sop[k]===true;const label=k.replace(/([A-Z])/g,' ').replace(/^./,s=>s.toUpperCase());sopEl.innerHTML+='<div class="sop-item '+(v?'sop-pass':'sop-fail')+'"><span>'+(v?'':'')+'</span>'+label+'</div>'});document.getElementById('callSOPExplanation').textContent=sop.explanation||'';
-    const an=data.analytics||{};const sc=an.sentiment==='Positive'?'sentiment-positive':an.sentiment==='Negative'?'sentiment-negative':'sentiment-neutral';document.getElementById('callAnalytics').innerHTML='<div style="display:flex;flex-wrap:wrap;gap:.8rem"><span class="entity-tag tag-org"> '+(an.paymentPreference||'N/A')+'</span><span class="entity-tag tag-amount"> '+(an.rejectionReason||'NONE')+'</span><span class="sentiment-badge '+sc+'">'+(an.sentiment==='Positive'?'':an.sentiment==='Negative'?'':'')+' '+(an.sentiment||'Neutral')+'</span></div>';
-    const kwEl=document.getElementById('callKeywords');kwEl.innerHTML='';(data.keywords||[]).forEach(k=>{kwEl.innerHTML+='<span class="keyword-chip">'+k+'</span>'});
-    document.getElementById('callStats').innerHTML='<div class="stat-item"> <span class="stat-value">'+callFile.name+'</span></div><div class="stat-item"> <span class="stat-value">'+(data.language||lang)+'</span></div><div class="stat-item"> <span class="stat-value">'+elapsed+'s</span></div>';
-    document.getElementById('callResults').classList.add('show');toast('Call analysis complete!','success');setTimeout(()=>document.getElementById('callResults').scrollIntoView({behavior:'smooth'}),200)
-    }catch(err){document.getElementById('callLoading').classList.remove('show');toast(err.message||'Error.')}finally{callBtn.disabled=false;callBtn.textContent='Analyze Call';callU()}
-  });
-})();
-</script>
-</body></html>
+      //  CALL ANALYSIS 
+      const callZone = document.getElementById('callUploadZone'), callInput = document.getElementById('callFileInput'), callPreview = document.getElementById('callFilePreview'), callName = document.getElementById('callFileName'), callRemove = document.getElementById('callRemoveFile'), callKey = document.getElementById('callApiKey'), callBtn = document.getElementById('callAnalyzeBtn');
+      let callFile = null;
+      function callFmt(n) { const e = n.split('.').pop().toLowerCase(); if (['mp3', 'wav', 'm4a', 'flac', 'ogg'].includes(e)) return e; return null }
+      function callU() { callBtn.disabled = !(callFile && callKey.value.trim()) }
+      function callH(f) { const fmt = callFmt(f.name); if (!fmt) { toast('Unsupported audio.'); return } if (f.size > 20 * 1024 * 1024) { toast('Max 20MB.'); return } callFile = f; callName.textContent = f.name; callPreview.classList.add('show'); callZone.classList.add('has-file'); callU() }
+      callZone.addEventListener('click', () => callInput.click()); callInput.addEventListener('change', e => { if (e.target.files[0]) callH(e.target.files[0]) });
+      callZone.addEventListener('dragover', e => { e.preventDefault(); callZone.classList.add('drag-over') }); callZone.addEventListener('dragleave', () => callZone.classList.remove('drag-over')); callZone.addEventListener('drop', e => { e.preventDefault(); callZone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) callH(e.dataTransfer.files[0]) });
+      callRemove.addEventListener('click', e => { e.stopPropagation(); callFile = null; callInput.value = ''; callPreview.classList.remove('show'); callZone.classList.remove('has-file'); callU() }); callKey.addEventListener('input', callU);
+      callBtn.addEventListener('click', async () => {
+        if (!callFile || !callKey.value.trim()) return; const key = callKey.value.trim(), fmt = callFmt(callFile.name), lang = document.getElementById('callLanguage').value; document.getElementById('callResults').classList.remove('show'); document.getElementById('callLoading').classList.add('show'); callBtn.disabled = true; callBtn.textContent = 'Analyzing...'; const start = performance.now();
+        try {
+          const b64 = await fileToBase64(callFile); const res = await fetch('/api/call-analytics', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': key }, body: JSON.stringify({ language: lang, audioFormat: fmt, audioBase64: b64 }) }); const data = await res.json(); if (!res.ok || data.status === 'error') throw new Error(data.message || 'Server error'); const elapsed = ((performance.now() - start) / 1000).toFixed(2);
+          document.getElementById('callLoading').classList.remove('show'); document.getElementById('callTranscript').textContent = data.transcript || 'No transcript.'; document.getElementById('callSummary').textContent = data.summary || 'No summary.';
+          const sop = data.sop_validation || {}; const score = sop.complianceScore || 0; document.getElementById('callScoreLabel').textContent = (score * 100).toFixed(0) + '%'; const bar = document.getElementById('callScoreBar'); bar.style.width = '0'; bar.style.background = score >= 0.8 ? 'var(--green)' : score >= 0.5 ? 'var(--gold)' : 'var(--red)'; setTimeout(() => { bar.style.width = score * 100 + '%' }, 100); document.getElementById('callAdherence').textContent = 'Status: ' + (sop.adherenceStatus || 'N/A');
+          const sopEl = document.getElementById('callSOP'); sopEl.innerHTML = '';['greeting', 'identification', 'problemStatement', 'solutionOffering', 'closing'].forEach(k => { const v = sop[k] === true; const label = k.replace(/([A-Z])/g, ' ').replace(/^./, s => s.toUpperCase()); sopEl.innerHTML += '<div class="sop-item ' + (v ? 'sop-pass' : 'sop-fail') + '"><span>' + (v ? '' : '') + '</span>' + label + '</div>' }); document.getElementById('callSOPExplanation').textContent = sop.explanation || '';
+          const an = data.analytics || {}; const sc = an.sentiment === 'Positive' ? 'sentiment-positive' : an.sentiment === 'Negative' ? 'sentiment-negative' : 'sentiment-neutral'; document.getElementById('callAnalytics').innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:.8rem"><span class="entity-tag tag-org"> ' + (an.paymentPreference || 'N/A') + '</span><span class="entity-tag tag-amount"> ' + (an.rejectionReason || 'NONE') + '</span><span class="sentiment-badge ' + sc + '">' + (an.sentiment === 'Positive' ? '' : an.sentiment === 'Negative' ? '' : '') + ' ' + (an.sentiment || 'Neutral') + '</span></div>';
+          const kwEl = document.getElementById('callKeywords'); kwEl.innerHTML = ''; (data.keywords || []).forEach(k => { kwEl.innerHTML += '<span class="keyword-chip">' + k + '</span>' });
+          document.getElementById('callStats').innerHTML = '<div class="stat-item"> <span class="stat-value">' + callFile.name + '</span></div><div class="stat-item"> <span class="stat-value">' + (data.language || lang) + '</span></div><div class="stat-item"> <span class="stat-value">' + elapsed + 's</span></div>';
+          document.getElementById('callResults').classList.add('show'); toast('Call analysis complete!', 'success'); setTimeout(() => document.getElementById('callResults').scrollIntoView({ behavior: 'smooth' }), 200)
+        } catch (err) { document.getElementById('callLoading').classList.remove('show'); toast(err.message || 'Error.') } finally { callBtn.disabled = false; callBtn.textContent = 'Analyze Call'; callU() }
+      });
+    })();
+  </script>
+</body>
+
+</html>
